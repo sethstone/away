@@ -20,12 +20,26 @@
 #ifndef _AWAY_H_
 #define _AWAY_H_
 
+#include <security/pam_appl.h>
+#include <security/pam_misc.h>
+#include <sys/stat.h>
+#include <pthread.h>
+#include <string.h>
+#include <signal.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <paths.h>
+#include <stdio.h>
+#include <time.h>
+#include <pwd.h>
+#include <ctype.h>
+#include <getopt.h>
+
+#define VERSION "0.9.0"
 #define AWAY_CONF_FILE ".awayrc"
 #define WHITESPACE " \t\n"
 #define APPEND_MAILBOX(root,path,desc) root=snocString((root),(path),(desc))
 #define FILE_NAME_LEN 1024
-
-const char *AWAY_VERSION = "0.9";
 
 /* number of secs to wait between checking mailboxes for new mail */
 const int MIN_WAIT_SECS = 30;
@@ -36,16 +50,14 @@ char *foundIn = NULL, *awayTime = 0;
 short pamActive = 0, mailFound = 0, notified  = 0;
 
 /* PAM conversation struct */
-static struct pam_conv conv = {
-  misc_conv, NULL
-};
+static struct pam_conv conv = { misc_conv, NULL };
 
-/* options */
-typedef enum { oMaildir, oMailbox, oWait, oBadOp } OpCodes;
+/* rc file commands */
+typedef enum { oMaildir, oMailbox, oWait, oBadCmd } CmdCodes;
 static struct {
   const char *name;
-  OpCodes opcode;
-} options[] = {
+  CmdCodes opcode;
+} commands[] = {
   { "maildir", oMaildir },
   { "mailbox", oMailbox },
   { "wait", oWait },
@@ -108,7 +120,7 @@ void short_help() { fprintf(stderr,"Usage: away [--help] [-m] <REASON>\n"); }
 
 /* Extended Help */
 void ext_help() {
-  printf("Away v%.20s (c) Cameron Moore <cameron@unbeatenpath.net>\n", AWAY_VERSION);
+  printf("Away v" VERSION " (c) Cameron Moore <cameron@unbeatenpath.net>\n");
   printf("Usage: away [--help] [-m] <REASON>\n\n");
   printf("   ex: away playing games\\!\\!\n");
   printf("       away -m Zzz...  :\\)\n\n");
@@ -200,15 +212,15 @@ void mail_thread_f(Mailbox *root) {
   pthread_exit(NULL);
 }
 
-/* Get OpCode */
-static OpCodes get_opcode(const char *cp, const char *filename, int linenum) {
+/* Get CmdCode */
+static CmdCodes get_opcode(const char *cp, const char *filename, int linenum) {
   unsigned int i;
-  for (i = 0; options[i].name; i++)
-    if (strcasecmp(cp, options[i].name) == 0)
-      return options[i].opcode;
+  for (i = 0; commands[i].name; i++)
+    if (strcasecmp(cp, commands[i].name) == 0)
+      return commands[i].opcode;
   fprintf(stderr, "%.200s: line %d: Bad configuration option: %.200s\n",
     filename, linenum, cp);
-  return oBadOp;
+  return oBadCmd;
 }
 
 /* Allocate New Link Node */
@@ -362,7 +374,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         /* change WAIT_SECS */
         if (changed_wait_secs) {
           cp = strtok(NULL, WHITESPACE);
-          fprintf(stderr,"%.200s line %d: multiple Wait options.\n",
+          fprintf(stderr,"%.200s line %d: multiple Wait commands.\n",
                   filename, linenum);
         } else {
           cp = strtok(NULL, WHITESPACE);
