@@ -2,5 +2,9 @@ BUG LIST for Away
 -----------------
 Email bug reports to cameron@unbeatenpath.net
 
-- don't handle config.h settings from ./configure
+* don't handle config.h settings from ./configure
+
+* configure.in could use some work
+
+* need to add autoconf substitution of version numers in data/ and doc/
 
