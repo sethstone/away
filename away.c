@@ -518,9 +518,3 @@ void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg) {
   /* exec THIS! */
   execvp(original, newargv);
 }
-
-/* Set conf file path */
-short set_conf_path(char *path) {
-  printf("** set_conf_path(%.200s);\n", path);
-  return 1;
-}
