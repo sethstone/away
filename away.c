@@ -1,4 +1,4 @@
-/* Away - Let other users know that you are away from your terminal
+/* Away - terminal locking program
  * Copyright (C) 1999-2000 Cameron Moore
  *
  * This program is free software; you can redistribute it and/or
@@ -26,14 +26,12 @@ int main(int argc, char **argv) {
   short mesg_exec = 0;
   short restart = 0;
 
-  /*
   signal(SIGINT , SIG_IGN);
   signal(SIGTERM, SIG_IGN);
   signal(SIGQUIT, SIG_IGN);
   signal(SIGTSTP, SIG_IGN);
   signal(SIGUSR1, SIG_IGN);
   signal(SIGUSR2, SIG_IGN);
-  */
  
   if (argc == 1) { short_help(argv[0]); }
   while ((c = getopt_long(argc, argv, "c:mhpPw:Wv", long_options, &option_index)) && c != -1) {
