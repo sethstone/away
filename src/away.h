@@ -1,5 +1,5 @@
 /* Away - terminal locking program
- * Copyright (C) 1999-2000 Cameron Moore
+ * Copyright (C) 1999-2002 Cameron Moore and others
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Or try here: http://www.fsf.org/copyleft/gpl.html
  *
- * $Id: away.h,v 1.10 2002-08-11 06:23:26 hrothgar Exp $
+ * $Id: away.h,v 1.11 2002-08-12 00:02:53 hrothgar Exp $
  */
 
 #ifndef _AWAY_H
@@ -72,7 +72,6 @@
  */
 
 /* contacts */
-#define CONTACT "cameron@unbeatenpath.net"
 #define MLIST   "away@unbeatenpath.net"
 
 /* Separator for conf file */

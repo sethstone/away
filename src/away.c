@@ -1,5 +1,5 @@
 /* Away - terminal locking program
- * Copyright (C) 1999-2000 Cameron Moore
+ * Copyright (C) 1999-2002 Cameron Moore and others
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Or try here: http://www.fsf.org/copyleft/gpl.html
  *
- * $Id: away.c,v 1.13 2002-08-11 23:12:54 hrothgar Exp $
+ * $Id: away.c,v 1.14 2002-08-12 00:02:53 hrothgar Exp $
  */
 
 #include "away.h"
@@ -224,7 +224,7 @@ char *make_path(dirs, filename)
 void print_version(void)
 {
   printf(PACKAGE " " VERSION "\n");
-  printf("Copyright (c) 1999, 2000 Cameron Moore <" CONTACT ">\n");
+  printf("Copyright (c) 1999-2002 Cameron Moore and others.\n");
   printf("This software comes with NO WARRANTY, to the extent permitted by law.\n");
   printf("You may redistribute copies of this software under the terms of the\n");
   printf("GNU General Public License.  For more information about these matters,\n");
