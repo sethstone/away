@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Or try here: http://www.fsf.org/copyleft/gpl.html
  *
- * $Id: away.c,v 1.12 2002-08-11 06:23:26 hrothgar Exp $
+ * $Id: away.c,v 1.13 2002-08-11 23:12:54 hrothgar Exp $
  */
 
 #include "away.h"
@@ -554,7 +554,7 @@ void read_config(root, homedir, username)
           cp = strtok(NULL, "\n");
           break;
         }
-        /* save the maildir for building paths to bailboxes */
+        /* save the maildir for building paths to mailboxes */
         cp = strtok(NULL, WHITESPACE);
         if (!cp)
           fprintf(stderr,"%s: %s line %d: missing argument.\n",
