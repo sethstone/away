@@ -5,7 +5,9 @@ Email suggestions to cameron@unbeatenpath.net
 - See if we can get around having to depend on the setenv() stuff or at
   least consolidate the vars into on single var.
 
-- Add option to disable mail checking (lock only)
+- Add option and command to disable mail checking (lock only)
+
+- Add option and command to enable mail checking
 
 - Possibly add a hook so that the path to a folder with new mail could
   be passed to an external command...then that command could print
