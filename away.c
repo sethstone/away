@@ -189,13 +189,13 @@ void print_version(void) {
 
 /* Short Help */
 void short_help(char *argv0) {
-  fprintf(stderr,"Usage: %s [OPTIONS] <REASON>\n", argv0);
+  fprintf(stderr,"Usage: %s [OPTIONS] message [...]\n", argv0);
   exit (0);
 }
 
 /* Extended Help */
 void ext_help(char *argv0) {
-  printf("Usage: %s [OPTIONS] <REASON>\n", argv0);
+  printf("Usage: %s [OPTIONS] message [...]\n", argv0);
   printf("A terminal locking program.\n\n");
   printf("  -c, --conf=FILE         specifies an alternative configuration file\n");
   printf("  -h, --help              display this help information\n");
