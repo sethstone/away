@@ -3,12 +3,14 @@
                            -------------          
                             Version 0.9
 
-    Away is a simple program that locks your terminal, checks for new 
-    mail in any given number of mailboxes, and lets others know why you 
-    are inactive.
+    Away is a terminal locking program with the additional ability to
+    check user-defined mailboxes for new mail.
 
-    Like many people (I assume), I always use the `w` command to see
-    what people are doing on a server.  I often need to talk with
+    Background
+    ----------
+
+    Also, like many people (I assume), I always use the `w` command to
+    see what people are doing on a server.  I often need to talk with
     someone online, and it drives me bonkers to see them online but
     idle for two+ hours.  Then I'm stuck with the decision of "should I
     wait a few minutes and see if they do something?" or "should I just
@@ -16,87 +18,14 @@
     Well, to combat this problem, I started this project.  My primary
     goal with writing Away was very simple:  write a program to take
     the place of "-bash" (or whatever shell you hold dear to your
-    heart) in the `w` command's "WHAT" column.
-
-    Away will also notify you if you have new mail.  By default Away
-    only checks for mail in a user's $INBOX, but by using the awayrc
-    file, a user can configure any given number of mailboxes to be
-    checked.
-
-    Away also uses PAM to lock your terminal the way xlock or xlockmore
-    locks an X11 session.
-
-    See the file COPYING for copyright and warranty information.
+    heart) in the `w` command's "WHAT" column.  Since that time, Away
+    has been transformed into a pretty nice terminal locking program.
 
 
-    Installation
-    ------------
-
-    $ tar zxvf away-x.y.z.tar.gz
-      - or -
-      tar yxvf away-x.y.z.tar.bz2
-      - or -
-      tar Ixvf away-x.y.z.tar.bz2
-    $ cd away-x.y/
-    $ make
-    $ su -c "make install"
-    $ su -c "make pam-install"
-
-    There's nothing fancy about that pam-install command.  It just
-    copies the away.pam file to /etc/pam.d/.  If you have an older
-    version of PAM, you may need to add the relevant lines to your
-    PAM configuration file manually.
-
-
-    Configuration
-    -------------
-
-    Each user may have an ~/.awayrc configuration file in their home
-    directory.  For a description and example of the rc file, see the
-    awayrc(5) man page or the awayrc file distributed in this package.
-
-
-    Usage
+    Legal
     -----
 
-    Once you get Away set up, it is very easy to use.  It accepts as
-    many parameters as you want to through at it, and these parameters
-    become part of your away message.  For example:
-
-        $ away reading Slashdot
-        $ away ...
-        $ away playing games
-
-    You may also use the -m operator to make away appear to execute
-    as another name, hence removing the "away -m" part of the command.
-    For example,
-
-        $ away -m playing games
-
-    will only show "playing games" in the `w` and `ps` output.
-
-    I've also found that symbolic links work great with away.  I used
-    to use this a lot before Seth sent me a patch for the -m option.
-    If you just want to be lazy and not have to do the -m option for
-    the same message all the time, you might like this method:
-
-        $ cd ~/bin
-        $ ln -s reading /usr/local/bin/away
-        $ reading /.
-
-    For more information, see the away(1) man page.
-
-
-    Contributers
-    ------------
-
-    See CREDITS file.
-    Seth Stone (pepper@initzero.net) suggested the locking
-        functionality and sent me the -m patch.  Thanks Seth!
-
-    Cameron Moore (cameron@unbeatenpath.net) is me, the originator of
-        project.  Most of my success can be attributed to the GPL.
-        Open source is a good thing.  *grin*
+    See the file COPYING for copyright and warranty information.
 
 
     Latest Versions
@@ -114,12 +43,55 @@
     Special thanks to the guys at WTLUG and Leapfrog Technologies.
 
 
+    Installation
+    ------------
+
+    $ tar zxvf away-x.y.z.tar.gz
+      - or -
+      tar yxvf away-x.y.z.tar.bz2
+      - or -
+      tar Ixvf away-x.y.z.tar.bz2
+    $ cd away-x.y.z/
+    $ make
+    $ su -c "make install"
+
+
+    Configuration
+    -------------
+
+    Each user may have an ~/.awayrc configuration file in their home
+    directory.  For a description and example of the rcfile, see the
+    awayrc(5) man page or the sample awayrc file distributed in this
+    package.
+
+
+    Usage
+    -----
+
+    See away(1) man page.
+
+
+    Contributers
+    ------------
+
+    See the CREDITS file.
+
+
+    Bug Reports and Patches
+    -----------------------
+
+    Any bug reports and/or patches should be sent to the Away mailing
+    list <away@unbeatenpath.net>.
+
+    See the BUGS file for a list of known bugs.
+
+
     Contact
     -------
 
-    If you have any questions, comments, enhancements, or a desire
-    to donate money to a broke college student, please email me, and
-    I'll try to get back to you as soon as possible.  Thanks.
+    A mailing list has been set up for the discussion of Away.  Please
+    send any messages related to Away to the mailing list at
+    <away@unbeatenpath.net>.
 
     Cameron Moore
     cameron@unbeatenpath.net
