@@ -6,5 +6,3 @@ Email bug reports to cameron@unbeatenpath.net
 
 * configure.in could use some work
 
-* data/Makefile.am doesn't install PAM policy file
-
