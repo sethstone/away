@@ -2,4 +2,5 @@ Cameron Moore <cameron@unbeatenpath.net>
 `-> creator
 
 Seth Stone <pepper@initzero.net>
-`-> suggested the locking functionality and wrote the execvp() code
+|-> suggested turning away into a terminal locking program
+`-> wrote the original execvp() code
