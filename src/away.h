@@ -83,22 +83,22 @@ const int MIN_TIME = 10;
 
 /* Default settings */
 int TIME = 300;
-short PERSIST = 1;
-short CHECK_MAIL = 1;
+int PERSIST = 1;
+int CHECK_MAIL = 1;
 
 /* flags to allow command line options to override conf file options */
-short TIME_OP = 0;
-short PERSIST_OP = 0;
-short RCFILE_OP = 0;
-short MAIL_OP = 0;
-short NORCFILE_OP = 0;
+int TIME_OP = 0;
+int PERSIST_OP = 0;
+int RCFILE_OP = 0;
+int MAIL_OP = 0;
+int NORCFILE_OP = 0;
 
 /* turned on while trying to authenticate the user */
-short pam_active = 0;
+int pam_active = 0;
 /* mail was found */
-short mail_found = 0;
+int mail_found = 0;
 /* the user has already been notified */
-short notified  = 0;
+int notified  = 0;
 /* name of mailbox new mail was found in */
 char *found_in = NULL;
 
@@ -153,25 +153,25 @@ static struct option long_options[] =
 
 /* prototypes */
 void master(void);
-short authenticate(char *username);
-char *make_path(char *dirs, char *filename);
+int authenticate(char *);
+char *make_path(char *, char *);
 void print_version(void);
-void short_help(char *argv0);
-void ext_help(char *argv0);
+void short_help(char *);
+void ext_help(char *);
 void stall(void);
 char *make_time(void);
 void salutations(void);
-short new_mail(Mailbox *mb);
-void mail_thread_f(Mailbox **root);
-static CmdCodes get_opcode(const char *cp, const char *filename, int linenum);
-static void *my_malloc(int n);
+int new_mail(Mailbox *);
+void mail_thread_f(Mailbox **);
+static CmdCodes get_opcode(const char *, const char *, int);
+static void *my_malloc(int);
 static Mailbox *make_cell(void);
-static Mailbox *snocString(Mailbox *root, char *path, char *desc);
-static void add_mailbox(Mailbox **list, char *path, char *desc);
-void set_defaults(Mailbox **root, char *name);
-void read_config(Mailbox **root, char *homedir, char *username);
-void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg);
+static Mailbox *snocString(Mailbox *, char *, char *);
+static void add_mailbox(Mailbox **, char *, char *);
+void set_defaults(Mailbox **, char *);
+void read_config(Mailbox **, char *, char *);
+void re_exec(int, char *[], int, int);
 void check_env(void);
-void free_mailboxes(Mailbox *root);
+void free_mailboxes(Mailbox *);
 
 #endif   /* _AWAY_H */

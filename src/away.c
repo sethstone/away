@@ -19,12 +19,15 @@
 
 #include "away.h"
 
-int main(int argc, char **argv) {
+int main(argc, argv)
+  int argc;
+  char **argv;
+{
   int option_count = 0;
   int option_index = 0;
   int c = 0;
-  short mesg_exec = 0;
-  short restart = 0;
+  int mesg_exec = 0;
+  int restart = 0;
 
   signal(SIGINT , SIG_IGN);
   signal(SIGHUP , SIG_IGN);
@@ -105,9 +108,10 @@ int main(int argc, char **argv) {
 }
 
 /* Master function */
-void master(void) {
+void master(void)
+{
   pthread_t mail_thread;
-  short error = 1;
+  int error = 1;
   struct passwd *pw = NULL;
   Mailbox *mailboxRoot = NULL;
 
@@ -146,8 +150,10 @@ void master(void) {
 }
 
 /* Authenticate Password */
-short authenticate(char *username) {
-  short error;
+int authenticate(username)
+  char *username;
+{
+  int error;
   pam_handle_t *pamh = NULL;
 
   /* start PAM session for 'away'.          *
@@ -168,7 +174,9 @@ short authenticate(char *username) {
 }
 
 /* Make a Path */
-char *make_path(char *dirs, char *filename) {
+char *make_path(dirs, filename)
+  char *dirs, *filename;
+{
   unsigned int size = 8;
   char *buffer = (char *) malloc (size),
     *last = strrchr(dirs, '/'), *format = NULL;
@@ -188,7 +196,8 @@ char *make_path(char *dirs, char *filename) {
 }
 
 /* Version */
-void print_version(void) {
+void print_version(void)
+{
   printf(PACKAGE " " VERSION "\n");
   printf("Copyright (c) 1999, 2000 Cameron Moore <" CONTACT ">\n");
   printf("This software comes with NO WARRANTY, to the extent permitted by law.\n");
@@ -200,13 +209,17 @@ void print_version(void) {
 }
 
 /* Short Help */
-void short_help(char *argv0) {
+void short_help(argv0)
+  char *argv0;
+{
   fprintf(stderr,"Usage: %s [OPTIONS] message [...]\n", argv0);
   exit (0);
 }
 
 /* Extended Help */
-void ext_help(char *argv0) {
+void ext_help(argv0)
+  char *argv0;
+{
   printf("Usage: %s [OPTIONS] message [...]\n", argv0);
   printf("A terminal locking program.\n\n");
   printf("  -c, --mail              enable checking of mail\n");
@@ -232,14 +245,16 @@ void ext_help(char *argv0) {
 }
 
 /* Stall */
-void stall(void) {
+void stall(void)
+{
   printf("\n       You went away at %.20s", make_time());
   printf("\n\n -- Press [Enter] to come back online --\n");
   getchar();
 }
 
 /* Get Current Time */
-char *make_time(void) {
+char *make_time(void)
+{
   unsigned int size = 8;
   char *buffer = (char *) malloc (size);
   time_t t = time(NULL);
@@ -258,12 +273,15 @@ char *make_time(void) {
 }
 
 /* Salutations */
-void salutations(void) {
+void salutations(void)
+{
   printf("\n     Welcome back. It's %.20s\n\n", make_time());
 }
 
 /* Check for New Mail */
-short new_mail(Mailbox *mb) {
+int new_mail(mb)
+  Mailbox *mb;
+{
   struct stat status;
   time_t mailread = 0, mailrecv = 0;
 
@@ -290,9 +308,11 @@ short new_mail(Mailbox *mb) {
 }
 
 /* Mail Thread Function */
-void mail_thread_f(Mailbox **root) {
+void mail_thread_f(root)
+  Mailbox **root;
+{
   Mailbox *mb = *root;
-  short slept = 0;
+  int slept = 0;
 
   while (1) {
     while (!mail_found || PERSIST) {
@@ -316,7 +336,10 @@ void mail_thread_f(Mailbox **root) {
 }
 
 /* Get CmdCode */
-static CmdCodes get_opcode(const char *cp, const char *filename, int linenum) {
+static CmdCodes get_opcode(cp, filename, linenum)
+  const char *cp, *filename;
+  int linenum;
+{
   unsigned int i;
   for (i = 0; commands[i].name; i++)
     if (strcasecmp(cp, commands[i].name) == 0)
@@ -327,7 +350,9 @@ static CmdCodes get_opcode(const char *cp, const char *filename, int linenum) {
 }
 
 /* Allocate New Link Node */
-static void *my_malloc(int n) {
+static void *my_malloc(n)
+  int n;
+{
   void *p = malloc( (size_t)n );
   if (p == NULL) {
     fprintf(stderr, "Out of Memory");
@@ -336,7 +361,8 @@ static void *my_malloc(int n) {
 }
 
 /* Setup New Mailbox Container */
-static Mailbox *make_cell(void) {
+static Mailbox *make_cell(void)
+{
   Mailbox *m = (Mailbox *) my_malloc(sizeof(Mailbox));
   m->path = m->desc = NULL;
   m->next = NULL;
@@ -344,7 +370,10 @@ static Mailbox *make_cell(void) {
 }
 
 /* Find New Node and Set String Values */
-static Mailbox *snocString(Mailbox *root, char *path, char *desc) {
+static Mailbox *snocString(root, path, desc)
+  Mailbox *root;
+  char *path, *desc;
+{
   if (root == NULL) {
     Mailbox *tmp = make_cell();
     tmp->path = (char *) my_malloc(5 + strlen(path));
@@ -361,7 +390,10 @@ static Mailbox *snocString(Mailbox *root, char *path, char *desc) {
 }
 
 /* Add New Mailbox to List */
-static void add_mailbox(Mailbox **list, char *path, char *desc) {
+static void add_mailbox(list, path, desc)
+  Mailbox **list;
+  char *path, *desc;
+{
   if (path != NULL) {
     int i, j, k, gotPath = 0;
     char tmpPath[FILE_NAME_LEN], tmpDesc[FILE_NAME_LEN];
@@ -398,16 +430,22 @@ static void add_mailbox(Mailbox **list, char *path, char *desc) {
 }
 
 /* Set Defaults */
-void set_defaults(Mailbox **root, char *name) {
+void set_defaults(root, name)
+  Mailbox **root;
+  char *name;
+{
   add_mailbox(root, make_path(_PATH_MAILDIR, name), "INBOX"); }
 
 /* Read Configuration File */
-void read_config(Mailbox **root, char *homedir, char *username) {
+void read_config(root, homedir, username)
+  Mailbox **root;
+  char *homedir, *username;
+{
   FILE *f = NULL;
   char line[1024], filename[256];
   char *cp = NULL, *maildir = "";
   unsigned int linenum = 0, opcode = 0;
-  short changed_mail = 0, changed_persist = 0, changed_time = 0;
+  int changed_mail = 0, changed_persist = 0, changed_time = 0;
 
   if (RCFILE_OP)
     snprintf(filename, sizeof filename, "%.200s", rcfile);
@@ -604,7 +642,10 @@ void read_config(Mailbox **root, char *homedir, char *username) {
 }
 
 /* Re-execute */
-void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg) {
+void re_exec(argc, argv, opt_cnt, as_mesg)
+  int argc, opt_cnt, as_mesg;
+  char *argv[];
+{
   /* preserve location of binary */
   char *original = argv[0]; 
   /* create new argv */
@@ -628,7 +669,8 @@ void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg) {
 }
 
 /* check ENV for options */
-void check_env(void) {
+void check_env(void)
+{
   if (getenv(AWAY_RCFILE)) {
     rcfile = getenv(AWAY_RCFILE);
     RCFILE_OP = 1;
@@ -660,7 +702,9 @@ void check_env(void) {
 }
 
 /* free mailboxes linked list */
-void free_mailboxes(Mailbox *root) {
+void free_mailboxes(root)
+  Mailbox *root;
+{
   while (root != NULL) {
     Mailbox *next = root->next;
     if (root->path != NULL) free(root->path);
