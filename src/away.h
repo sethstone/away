@@ -168,6 +168,7 @@ static struct option long_options[] =
 /* prototypes */
 void master(void);
 int authenticate(char *);
+int authenticate_root(void);
 char *make_path(char *, char *);
 void print_version(void);
 void short_help(void);

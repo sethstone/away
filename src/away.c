@@ -174,6 +174,29 @@ int authenticate(username)
   return error;
 }
 
+/* Authenticate Root Password */
+int authenticate_root(void)
+{
+  int error;
+  pam_handle_t *pamh = NULL;
+
+  /* start PAM session for 'away'.          *
+   * the session name is what PAM looks for *
+   * in /etc/pam.d/ or /etc/pam.config      */
+  error = pam_start("away", "root", &conv, &pamh);
+
+  /* authenticate */
+  if (!error) error = pam_authenticate(pamh, 0);
+
+  /* close PAM session */
+  if (pam_end(pamh,error) != PAM_SUCCESS) {
+    pamh = NULL;
+    fprintf(stderr,"%s: failed to release PAM authenticator\n", argv0);
+    error = 1;
+  }
+  return error;
+}
+
 /* Make a Path */
 char *make_path(dirs, filename)
   char *dirs, *filename;
