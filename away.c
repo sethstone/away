@@ -68,6 +68,10 @@ int main(int argc, char **argv) {
       case 'v':
         print_version();
         break;
+      case '?':
+        fprintf(stderr, "Try `%s --help` for more information.\n", argv[0]);
+	exit(0);
+        break;
       default:
         break;
     }
