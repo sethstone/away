@@ -148,6 +148,7 @@ typedef struct mailbox {
   char *path;             /* path to mailbox */
   char *desc;             /* description of mailbox */
   time_t mtime;           /* last modified time (new mail) */
+  time_t atime;           /* last accessed time (read mail) */
   struct mailbox *next;
 } Mailbox;
 

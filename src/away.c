@@ -31,7 +31,6 @@ int main(argc, argv)
   argv0 = argv[0];
 
   signal(SIGINT , SIG_IGN);
-  //signal(SIGHUP , SIG_IGN);
   signal(SIGTERM, SIG_IGN);
   signal(SIGQUIT, SIG_IGN);
   signal(SIGTSTP, SIG_IGN);
@@ -323,8 +322,12 @@ int new_mail(mb)
     mailread = status.st_atime;
   }
 
-  if ((mailread < mailrecv) && (mb->mtime != mailrecv)) {
+  if ((mailread < mailrecv) &&
+     (mb->mtime != mailrecv) &&
+     (mb->atime != mailread))
+  {
     mb->mtime = mailrecv;
+    mb->atime = mailread;
     return mail_found = 1;
   } else {
     return mail_found = 0;
