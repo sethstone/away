@@ -1,5 +1,6 @@
 Changes from 0.9.2 to 0.9.6:
   - added and changed some command-line options
+  - added and changed rcfile commands
   - added persist code
   - added more rcfile commands
   - added aclocal, autoheader, automake, autoconf support
