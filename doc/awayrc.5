@@ -26,6 +26,12 @@ case-insensitive.  Commands and arguments are separated by spaces.
 The hash mark, or pound sign ("#"), is used as a comment character.
 You can use it to annotate your configuration file.  All text after
 the comment character to the end of the line is ignored.
+
+Take note that if any mailboxes are configured in the rc file, they
+will be the only mailboxes checked, which means that you must add your
+inbox--the
+.B $MAIL
+environment variable will be ignored.
 .SH COMMANDS
 .IP "mail VALUE"
 This command allows the user to disable or enable the checking of
@@ -79,10 +85,10 @@ maildir /home/johndoe/mail
 .RS
 Per user configuration file.
 .RE
-.SH SEE ALSO
-.BR away (1)
 .SH BUGS
 Bug reports should be sent to the away mailing list
 <away@unbeatenpath.net>.
+.SH SEE ALSO
+.BR away (1)
 .SH AUTHORS
 Cameron Moore <cameron@unbeatenpath.net>, and others.
