@@ -130,6 +130,5 @@ void set_defaults(Mailbox **root, char *name);
 void read_config(Mailbox **root, char *homedir, char *username);
 void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg);
 void check_env(void);
-void clean_env(void);
 
 #endif   /* _AWAY_H */
