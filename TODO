@@ -20,6 +20,8 @@ Email suggestions to cameron@unbeatenpath.net
 
 - Maildir folder support (primarily for systems with qmail)
 
-- gettext i18n support
+- gettext i18n support (will need translators, I think)
   http://www.gnu.org/manual/gettext/index.html
+
+- Add non-PAM authentication.  Someone else want to do this?
 
