@@ -4,8 +4,6 @@ Email bug reports to cameron@unbeatenpath.net
 
 - poorly handle invalid conf files.  use access()
 
-- leak memory if processes are killed
-
 - once a mailbox has new mail, it is forgotten about.  we should
   store timestamps on mailboxes with new mail so we know when a
   mailbox has been *read* (from another shell or whatever).  if the
