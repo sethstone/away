@@ -15,7 +15,7 @@
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 .\" Or try here: http://www.fsf.org/copyleft/gpl.html
 .\"
-.TH awayrc 5 "October 2000" Linux "User Manuals"
+.TH awayrc 5 "November 2000" Linux "User Manuals"
 .SH NAME
 awayrc \- configuration file for Away
 .SH DESCRIPTION
@@ -27,6 +27,14 @@ The hash mark, or pound sign ("#"), is used as a comment character.
 You can use it to annotate your configuration file.  All text after
 the comment character to the end of the line is ignored.
 .SH COMMANDS
+.IP "mail VALUE"
+This command allows the user to disable or enable the checking of
+the user's mailboxes.  If mail checking is disabled, all
+.I mailbox
+and
+.I maildir
+commands are ignored.  VALUE can be 0, 1, no, or yes.  The default
+value is 'yes'.
 .IP "mailbox FILENAME"
 A file that should be checked for "new mail."  The filename will be
 appended to the previous
@@ -40,16 +48,20 @@ A path where subsequent
 declarations will be located.  The only argument is the path itself.
 .IP "persist VALUE"
 This command will set whether to do persistent mail checking.  VALUE
-can be 0, 1, no, or yes.
-.IP "wait SECONDS"
-The number of seconds to wait before checking for new mail.  The
-default is 300 seconds.  The value must be greater
-than the minimum set at compile time.  The only argument is the
-number of seconds to wait.
+can be 0, 1, no, or yes.  The default value is 'yes'.
+.IP "time SECONDS"
+This command will set the number of seconds that away sleeps before
+performing its background tasks.  Presently, the only background task
+that away will perform is the checking of mailboxes.  The SECONDS value
+must be more than the minimum, which set at compile time.  The only
+argument is the number of seconds.  The default value is 300.
 .SH EXAMPLE
 .nf
+# check mailboxes
+mail yes
+
 # check mail every 60 seconds
-wait 60
+time 60
 
 # do not do persistent checking
 persist no
@@ -69,5 +81,8 @@ Per user configuration file.
 .RE
 .SH SEE ALSO
 .BR away (1)
+.SH BUGS
+Bug reports should be sent to the away mailing list
+<away@unbeatenpath.net>.
 .SH AUTHORS
 Cameron Moore <cameron@unbeatenpath.net>, and others.
