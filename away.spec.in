@@ -1,20 +1,21 @@
-%define version 0.9.6
+%define name @PACKAGE@
+%define version @VERSION@
 %define release 1
-%define name away
 
-Summary: terminal locking
-Name: away
-Version: 0.9.6
-Release: 1
+Summary: Away: a terminal locking program
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Source: %{name}-%{version}.tar.gz
+URL: http://unbeatenpath.net/software/away
 Copyright: GPL
 Group: Utilities/Console
-Source: http://unbeatenpath.net/software/away/%{name}-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-%{version}-root
-Url: http://unbeatenpath.net/software/away
+Prefix: %{_prefix}
 Packager: Cameron Moore <cameron@unbeatenpath.net>
 
 %description
-%{name} is a terminal locking program with the additional ability
+Away is a terminal locking program with the additional ability
 to check user-defined mailboxes for new mail.
 
 %prep
@@ -22,11 +23,12 @@ rm -rf $RPM_BUILD_ROOT
 %setup
 
 %build
-./configure --prefix=/usr
-make CFLAGS="$RPM_OPT_FLAGS"
+CFLAGS="$RPM_OPT_FLAGS" ./configure --prefix=%{prefix}
+make
 
 %install
-make ROOT="$RPM_BUILD_ROOT" install
+rm -rf $RPM_BUILD_ROOT
+make install prefix=$RPM_BUILD_ROOT/%{prefix}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -34,12 +36,17 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README TODO
-/etc/pam.d/away
-/usr/bin/away
-/usr/man/man1/away.1
-/usr/man/man5/awayrc.5
+%{prefix}/etc/pam.d/away
+%{prefix}/bin/away
+%{prefix}/man/man1/away.1
+%{prefix}/man/man5/awayrc.5
 
 %changelog
+* Sun Jan 14 2001 Cameron Moore <cameron@unbeatenpath.net>
+- get 'name' and 'version' from configure
+- added use of prefix variable
+- restructed build, install, and files sections
+
 * Sat Jan 13 2001 Cameron Moore <cameron@unbeatenpath.net>
 - created spec
 
