@@ -1,4 +1,4 @@
-/* Away - Let other users know that you are away from your terminal
+/* Away - terminal locking program
  * Copyright (C) 1999-2000 Cameron Moore
  *
  * This program is free software; you can redistribute it and/or
