@@ -7,7 +7,7 @@ SRC    = $(BINARY).c
 
 # compiler
 CC     = gcc
-CFLAGS = -O2 -Wall -D_REENTRANT
+CFLAGS = -O2 -Wall -D_REENTRANT -g
 LIBS   = -lpthread -ldl -lpam -lpam_misc
 
 # alias away
