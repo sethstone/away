@@ -1,6 +1,6 @@
 TODO/WISHLIST for Away
 ----------------------
-Email suggestions to cameron@unbeatenpath.net
+Email suggestions to away@unbeatenpath.net
 
 - See if we can get around having to depend on the setenv() stuff or at
   least consolidate the vars into on single var.
