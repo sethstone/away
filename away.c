@@ -109,7 +109,7 @@ void master(void) {
   pthread_t mail_thread;
   short error = 1;
   struct passwd *pw = NULL;
-  Mailbox *mailboxRoot = NULL, *mb = NULL;
+  Mailbox *mailboxRoot = NULL;
 
   /* get home dir */
   pw = getpwuid(getuid());
@@ -144,14 +144,7 @@ void master(void) {
   if ((!notified) && (mail_found))
     printf("\a\n       You have new mail in %.200s.\n", found_in);
   salutations();
-  /* clean up LL */
-  mb = mailboxRoot;
-  while (mb != NULL) {
-    Mailbox *next = mb->next;
-    if (mb->path != NULL) free(mb->path);
-    free(mb);
-    mb = next;
-  };
+  free_mailboxes(mailboxRoot);
 }
 
 /* Authenticate Password */
@@ -226,7 +219,7 @@ void ext_help(char *argv0) {
   printf("  -P, --nopersist         stop checking mail if any mailbox is found\n");
   printf("                          to have new mail\n");
   printf("  -t, --time=SECONDS      sets the time interval by which the program\n");
-  printf("                          performs is background tasks\n");
+  printf("                          performs its background tasks\n");
   printf("  -T, --notime            ignore any options to set the time interval\n");
   printf("                          and use the default of %d seconds\n",
          TIME);
@@ -455,7 +448,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
       case oMail:
         /* if changed from command line */
         if (MAIL_OP) {
-          cp = strtok(NULL, WHITESPACE);
+          cp = strtok(NULL, "\n");
           break;
         }
         if (changed_mail) {
@@ -481,6 +474,10 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         break;
 
       case oMaildir:
+        if (!CHECK_MAIL) {
+          cp = strtok(NULL, "\n");
+          break;
+        }
         /* save the maildir for building paths to bailboxes */
         cp = strtok(NULL, WHITESPACE);
         if (!cp)
@@ -503,6 +500,10 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         break;
 
       case oMailbox:
+        if (!CHECK_MAIL) {
+          cp = strtok(NULL, "\n");
+          break;
+        }
         /* append mailbox to maildir and save */
         cp = strtok(NULL, WHITESPACE);
         if (!cp)
@@ -529,7 +530,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
       case oPersist:
         /* if changed from command line */
         if (PERSIST_OP) {
-          cp = strtok(NULL, WHITESPACE);
+          cp = strtok(NULL, "\n");
           break;
         }
         if (changed_persist) {
@@ -558,7 +559,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
       case oWait:
         /* if changed from command line */
         if (TIME_OP) {
-          cp = strtok(NULL, WHITESPACE);
+          cp = strtok(NULL, "\n");
           break;
         }
         /* change TIME */
@@ -596,6 +597,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
 
   /* if no mailboxes where setup, add system inbox */
   if (CHECK_MAIL && root == NULL) { set_defaults(root, username); }
+  else if (!CHECK_MAIL) { free_mailboxes(*root); }
 }
 
 /* Re-execute */
@@ -654,3 +656,12 @@ void check_env(void) {
   }
 }
 
+/* free mailboxes linked list */
+void free_mailboxes(Mailbox *root) {
+  while (root != NULL) {
+    Mailbox *next = root->next;
+    if (root->path != NULL) free(root->path);
+    free(root);
+    root = next;
+  };
+}
