@@ -20,8 +20,10 @@
 #ifndef _AWAY_H
 #define _AWAY_H
 
-/* version and contacts */
-#define VERSION "0.9.4"
+/* ./configure help */
+#include "../config.h"
+
+/* contacts */
 #define CONTACT "cameron@unbeatenpath.net"
 #define MLIST   "away@unbeatenpath.net"
 
@@ -42,11 +44,21 @@
 #define AWAY_MAIL         "AWAY_MAIL"
 #define AWAY_PERSIST      "AWAY_PERSIST"
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
+
 #include <stdio.h>
+
+#ifdef   STDC_HEADERS
 #include <stdlib.h>
 #include <string.h>
+#endif //STDC_HEADERS
+
+#ifdef   HAVE_UNISTD_H
 #include <unistd.h>
+#endif //HAVE_UNISTD_H
+
 #include <paths.h>
 #include <time.h>
 #include <pwd.h>
