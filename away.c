@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     restart = 1;
     switch (c) {
       case 'c':
-        setenv(AWAY_CONF_FILE, (char *) strdup(optarg), 1);
+        setenv(AWAY_CONF_FILE, (char *)strdup(optarg), 1);
         option_count += strchr(argv[option_count],'=') ? 1 : 2;
         break;
       case 'm':
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
         break;
       case 'w':
         if (atoi(optarg) >= MIN_WAIT_SECS)
-          setenv(AWAY_WAIT_SECS, (char *) strdup(optarg), 1);
+          setenv(AWAY_WAIT_SECS, (char *)strdup(optarg), 1);
         option_count += strchr(argv[option_count],'=') ? 1 : 2;
         break;
       case 'W':
@@ -84,10 +84,10 @@ int main(int argc, char **argv) {
 
   check_env();
   master();
-  clean_env();
   return 0;
 }
 
+/* Master function */
 void master(void) {
   pthread_t mail_thread;
   short error = 1;
@@ -95,47 +95,46 @@ void master(void) {
   Mailbox *mailboxRoot = NULL, *mb = NULL;
 
 
-    /* get home dir */
-    pw = getpwuid(getuid());
-    if (!pw) { fprintf(stderr, "You don't exist!\n"); exit(1); }
-    read_config(&mailboxRoot, pw->pw_dir, pw->pw_name);
+  /* get home dir */
+  pw = getpwuid(getuid());
+  if (!pw) { fprintf(stderr, "You don't exist!\n"); exit(1); }
+  read_config(&mailboxRoot, pw->pw_dir, pw->pw_name);
 
-    /* build time string */
-    awayTime = make_time();
-    /* start mail checking thread */
-    pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, mailboxRoot);
+  /* build time string */
+  awayTime = make_time();
+  /* start mail checking thread */
+  pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, mailboxRoot);
 
-    /* lock this sucka up */
-    while (error) {
-      stall();
-      /* authenticate the user */
-      pamActive = 1;
-      error = authenticate(pw->pw_name);
-      pamActive = 0;
-      /* on invalid passwd */
-      if (error) {
-        printf("\a** Invalid password **\n");
-        /* mail was found during authentication... */
-        if ((!notified) && (mailFound)) {
-          printf("\a\n       You have new mail in %.200s.\n", foundIn);
-          notified = 1;
-        }
+  /* lock this sucka up */
+  while (error) {
+    stall();
+    /* authenticate the user */
+    pamActive = 1;
+    error = authenticate(pw->pw_name);
+    pamActive = 0;
+    /* on invalid passwd */
+    if (error) {
+      printf("\a** Invalid password **\n");
+      /* mail was found during authentication... */
+      if ((!notified) && (mailFound)) {
+        printf("\a\n       You have new mail in %.200s.\n", foundIn);
+        notified = 1;
       }
-    } /* while */
+    }
+  } /* while */
 
-    /* mail was found during authentication... */
-    if ((!notified) && (mailFound))
-      printf("\a\n       You have new mail in %.200s.\n", foundIn);
-    salutations();
-    /* clean up LL */
-    mb = mailboxRoot;
-    while (mb != NULL) {
-      Mailbox *next = mb->next;
-      if (mb->path != NULL) free(mb->path);
-      free(mb);
-      mb = next;
-    };
-//  }
+  /* mail was found during authentication... */
+  if ((!notified) && (mailFound))
+    printf("\a\n       You have new mail in %.200s.\n", foundIn);
+  salutations();
+  /* clean up LL */
+  mb = mailboxRoot;
+  while (mb != NULL) {
+    Mailbox *next = mb->next;
+    if (mb->path != NULL) free(mb->path);
+    free(mb);
+    mb = next;
+  };
 }
 
 /* Authenticate Password */
@@ -525,26 +524,31 @@ void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg) {
 
 /* check ENV for options */
 void check_env(void) {
-  if (getenv(AWAY_CONF_FILE))
+  if (getenv(AWAY_CONF_FILE)) {
     conf_file = getenv(AWAY_CONF_FILE);
+    CONF_OP = 1;
+    unsetenv(AWAY_CONF_FILE);
+  }
 
-  if (!getenv(AWAY_NO_WAIT) && getenv(AWAY_WAIT_SECS) &&
-      atoi(getenv(AWAY_WAIT_SECS)) >= MIN_WAIT_SECS)
-    WAIT_SECS = atoi(getenv(AWAY_WAIT_SECS));
+  if (getenv(AWAY_NO_WAIT)) {
+    WAIT_OP = 1;
+    unsetenv(AWAY_NO_WAIT);
+  } else if (getenv(AWAY_WAIT_SECS)) {
+    if (atoi(getenv(AWAY_WAIT_SECS)) >= MIN_WAIT_SECS) {
+      WAIT_SECS = atoi(getenv(AWAY_WAIT_SECS));
+      WAIT_OP = 1;
+    }
+    unsetenv(AWAY_WAIT_SECS);
+  }
 
-  if (getenv(AWAY_PERSIST))
+  if (getenv(AWAY_PERSIST)) {
     PERSIST = atoi(getenv(AWAY_PERSIST));
+    PERSIST_OP = 1;
+    unsetenv(AWAY_PERSIST);
+  }
 
   printf("conf_file=%s\n",conf_file);
   printf("WAIT_SECS=%d\n",WAIT_SECS);
   printf("PERSIST  =%d\n",PERSIST);
-}
-
-/* clean up ENV variables */
-void clean_env(void) {
-  if (getenv(AWAY_CONF_FILE)) unsetenv(AWAY_CONF_FILE);
-  if (getenv(AWAY_WAIT_SECS)) unsetenv(AWAY_WAIT_SECS);
-  if (getenv(AWAY_NO_WAIT)) unsetenv(AWAY_NO_WAIT);
-  if (getenv(AWAY_PERSIST)) unsetenv(AWAY_PERSIST);
 }
 
