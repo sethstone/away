@@ -1,0 +1,12 @@
+VERSION NEWS
+============
+
+v0.9.4
+------
+* The command-line options have been changed;  Some of the old options
+  have been changed to a different letter/word, and some new options
+  have been added.
+
+* The rcfile commands have been changed;  Some of old commands have
+  been renamed and some new options have been added.
+
