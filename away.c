@@ -428,11 +428,25 @@ void read_config(Mailbox **root, char *homedir, char *username) {
   else
     snprintf(filename, sizeof filename, "%.100s/%.100s", homedir,conf_file);
 
+  /* check for existance of conf file */
+  if (access(filename, F_OK) == -1) {
+    if (CONF_OP) {
+      fprintf(stderr, "Could not open %s: file does not exist\n", filename);
+    }
+    set_defaults(root, username);
+    return;
+  }
+
+  /* check for existance of conf file */
+  if (access(filename, R_OK) == -1) {
+    fprintf(stderr, "Could not open %s: access denied\n", filename);
+    set_defaults(root, username);
+    return;
+  }
+
   /* open rc file */
   f = fopen(filename, "r");
   if (!f) {
-    if (CONF_OP) { fprintf(stderr, "Could not open %s", filename); }
-    /* if there is no rc file, assume they have a /var/spool/mail file */
     set_defaults(root, username);
     return;
   }
