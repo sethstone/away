@@ -7,7 +7,7 @@ SRC    = $(BINARY).c
 
 # compiler
 CC     = gcc
-CFLAGS = -O2 -Wall -D_REENTRANT -g
+CFLAGS = -O2 -Wall -D_REENTRANT
 LIBS   = -lpthread -ldl -lpam -lpam_misc
 
 # alias away
@@ -23,9 +23,6 @@ install: $(BINARY)
 	cp $(BINARY) $(PREFIX)/bin/
 	cp doc/away.1 $(PREFIX)/man/man1/
 	cp doc/awayrc.5 $(PREFIX)/man/man5/
-
-# make pam-install
-pam-install: $(BINARY)
 	cp data/away.pam /etc/pam.d/away
 
 # Clean up
