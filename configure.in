@@ -8,12 +8,25 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 
-dnl Checks for libraries.
-AC_CHECK_LIB(dl, dlopen)
-LIBS="$LIBS -lpam"
-#AC_CHECK_LIB(pam, pam_start)
-AC_CHECK_FUNCS(pam_getenvlist)
-AC_CHECK_LIB(pam_misc, misc_conv)
+dnl Require dynamic linker (?)
+AC_CHECK_LIB(dl, dlopen,
+  LIBS="$LIBS -ldl",
+  AC_MSG_ERROR([Could not find dlopen in -ldl.])
+)
+
+dnl Require pam
+AC_CHECK_LIB(pam, pam_start,
+  LIBS="$LIBS -lpam",
+  AC_MSG_ERROR([Could not find pam_start in -lpam.])
+)
+
+dnl Require pam_misc
+AC_CHECK_LIB(pam_misc, misc_conv,
+  LIBS="$LIBS -lpam_misc",
+  AC_MSG_ERROR([Could not find misc_conv in -lpam_misc.])
+)
+
+dnl Check for pthreads
 AC_CHECK_LIB(pthread, pthread_create)
 
 dnl Checks for header files.
