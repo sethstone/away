@@ -11,9 +11,12 @@ Email suggestions to cameron@unbeatenpath.net
 
 - gracefully handle signals (SIGSEGV, etc)
 
+- Designate a signal to allow superuser authentication
+
 - Possibly add a hook so that the path to a folder with new mail could
   be passed to an external command...then that command could print
-  whatever message the user wants to conjure up
+  whatever message the user wants to conjure up.  use -e option to do
+  this.
 
 - GNU-ize (create a configure script, etc; migrate to /data and /src
   directory structure)
@@ -21,4 +24,7 @@ Email suggestions to cameron@unbeatenpath.net
 - Make the `make pam-install` smarter (prolly handled by above)
 
 - Maildir folder support (primarily for systems with qmail)
+
+- get code from the vlock program to disallow virtual terminal
+  switching
 
