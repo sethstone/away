@@ -2,14 +2,14 @@ TODO/WISHLIST for Away
 ----------------------
 Email suggestions to cameron@unbeatenpath.net
 
-- gracefully handle signals (SIGSEGV, etc)
-
 - create -c command line option to specify a different rc file
 
 - create -p and [Persist] option to command line and rc file to allow
   persistent checking of mailboxes.  ie., when mail is found in "foo",
   away continues checking for mail in all other mailboxes.  default to
   yes.
+
+- gracefully handle signals (SIGSEGV, etc)
 
 - Possibly add a hook so that the path to a folder with new mail could
   be passed to an external command...then that command could print
