@@ -31,7 +31,7 @@ int main(argc, argv)
   argv0 = argv[0];
 
   signal(SIGINT , SIG_IGN);
-  signal(SIGHUP , SIG_IGN);
+  //signal(SIGHUP , SIG_IGN);
   signal(SIGTERM, SIG_IGN);
   signal(SIGQUIT, SIG_IGN);
   signal(SIGTSTP, SIG_IGN);
