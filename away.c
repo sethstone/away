@@ -301,7 +301,7 @@ void mail_thread_f(Mailbox **root) {
           Mailbox *tmp = mb;
           incr = 0;
           /* reset place keepers */
-          notified = found_mail = 0;
+          notified = found_mail = mailFound = 0;
 
           if (mb == *root) {
             deleted_root = 1;
