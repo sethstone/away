@@ -14,7 +14,8 @@ Email suggestions to cameron@unbeatenpath.net
   switching...not a priority.
 
 - Designate a signal to allow superuser authentication.  This would
-  prevent some luser from locking all of the VTs.
+  prevent some luser from locking all of the VTs.  Need to write a set
+  of signal handling routines to facilitate this.
 
 - Break up source into more files (help.[ch], mail.[ch], ...)
 
@@ -24,4 +25,6 @@ Email suggestions to cameron@unbeatenpath.net
   http://www.gnu.org/manual/gettext/index.html
 
 - Add non-PAM authentication.  Someone else want to do this?
+
+- Work around pthreads if it's not available
 
