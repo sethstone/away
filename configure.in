@@ -8,25 +8,13 @@ dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 
-dnl Require dynamic linker (?)
-AC_CHECK_LIB(dl, dlopen,
-  LIBS="$LIBS -ldl",
-  AC_MSG_ERROR([*** libdl missing - please install first ***])
-)
+dnl Checks for libpam
+AC_CHECK_LIB(pam, pam_start)
 
-dnl Require pam
-AC_CHECK_LIB(pam, pam_start,
-  LIBS="$LIBS -lpam",
-  AC_MSG_ERROR([*** libpam missing - please install first ***])
-)
+dnl Checks for libpam_misc
+AC_CHECK_LIB(pam_misc, misc_conv)
 
-dnl Require pam_misc
-AC_CHECK_LIB(pam_misc, misc_conv,
-  LIBS="$LIBS -lpam_misc",
-  AC_MSG_ERROR([*** libpam_misc missing - please install first ***])
-)
-
-dnl Check for pthreads
+dnl Checks for libpthread
 AC_CHECK_LIB(pthread, pthread_create)
 
 dnl Checks for header files.
@@ -40,7 +28,7 @@ AC_STRUCT_TM
 
 dnl Checks for library functions.
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS(strdup strspn strstr)
+AC_CHECK_FUNCS(strdup strspn strstr strtok)
 
 AM_CONFIG_HEADER(config.h)
 AC_OUTPUT(Makefile src/Makefile data/Makefile doc/Makefile)
