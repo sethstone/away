@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Or try here: http://www.fsf.org/copyleft/gpl.html
  *
- * $Id: away.c,v 1.14 2002-08-12 00:02:53 hrothgar Exp $
+ * $Id: away.c,v 1.15 2002-08-12 00:28:11 hrothgar Exp $
  */
 
 #include "away.h"
@@ -589,7 +589,8 @@ void read_config(root, homedir, username)
           char *desc = strtok(NULL, "\n");
           if (!desc) desc = strdup(cp);
           else if (strstr(desc,"{") && strstr(desc,"}"))
-            desc = strtok(desc,"{}");
+            strtok(desc,"{}");
+            desc = strtok(NULL,"{}");
           else {
             fprintf(stderr,"%s: %s: line %d: garbage at end of line.\n",
                     argv0, filename, linenum);

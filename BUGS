@@ -2,10 +2,6 @@ BUG LIST for Away
 -----------------
 Email bug reports to away@unbeatenpath.net
 
-* in the rc file, if you have more than one whitespace char after the
-  filename and the comment it says there's garbage at the end of the
-  line (virtually ignore you cool alias name)
-
 * don't handle all config.h settings from ./configure
 
 * configure.in could use some work
