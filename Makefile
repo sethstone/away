@@ -1,6 +1,7 @@
 # Makefile for Away
 
 # files and paths
+SHELL  = /bin/sh
 PREFIX = /usr/local
 BINARY = away
 SRC    = $(BINARY).c
@@ -8,7 +9,7 @@ SRC    = $(BINARY).c
 # compiler
 CC     = gcc
 CFLAGS = -O2 -Wall -D_REENTRANT
-LIBS   = -lpthread -ldl -lpam -lpam_misc
+LIBS   = -lpthread -lpam -lpam_misc
 
 # alias away
 all: $(BINARY)
