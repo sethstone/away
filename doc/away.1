@@ -15,7 +15,7 @@
 .\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 .\" Or try here: http://www.fsf.org/copyleft/gpl.html
 .\"
-.TH away 1 "October 2000" Linux "User Manuals"
+.TH away 1 "November 2000" Linux "User Manuals"
 .SH NAME
 away \- terminal locking program
 .SH SYNOPSIS
@@ -28,9 +28,15 @@ is a simple program that locks your terminal, checks for new mail
 in any given number of mailboxes, and lets other users know why
 you are inactive.
 .SH OPTIONS
-.IP "-c, --conf=FILE"
+.IP "-c, --mail"
+Enable checking of mail.
+.IP "-C, --nomail"
+Disable checking of mail.
+.IP "-f, --rcfile=FILE"
 Specify an alternative configuration file instead of the default
 ~/.awayrc file.
+.IP "-F, --norcfile"
+Ignore user configuration file.
 .IP "-h, --help"
 Display help.
 .IP "-m, --message"
@@ -41,10 +47,13 @@ Continue checking for new mail as long as there is at least one mailbox
 that has not received new mail.
 .IP "-P, --nopersist"
 Stop checking mail if any mailbox is found to have new mail.
-.IP "-w, --wait=SECS"
-Set how long, in seconds, the program waits between mail checks.
-.IP "-W, --nowait"
-Ignore any changes to the wait time and use the default time period.
+.IP "-t, --time=SECONDS"
+Set the number of second that away sleeps before performing its
+background tasks.  Presently, the only background task that away will
+perform is the checking of mailboxes.
+.IP "-T, --notime"
+Ignore any options to set the time interval and use the default number
+of seconds.
 .IP "-v, --version"
 Display version information.
 .SH FILES
@@ -63,5 +72,8 @@ configuration file.
 .RE
 .SH SEE ALSO
 .BR awayrc (5)
+.SH BUGS
+Bug reports should be sent to the away mailing list
+<away@unbeatenpath.net>.
 .SH AUTHORS
 Cameron Moore <cameron@unbeatenpath.net>, and others.
