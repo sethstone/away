@@ -59,8 +59,13 @@
 #include <unistd.h>
 #endif //HAVE_UNISTD_H
 
-#include <paths.h>
+#ifdef   TM_IN_SYS_TIME
+#include <sys/time.h>
+#else
 #include <time.h>
+#endif //TIM_IN_SYS_TIME
+
+#include <paths.h>
 #include <pwd.h>
 #include <ctype.h>
 #include <signal.h>
