@@ -560,7 +560,7 @@ void read_config(root, homedir, username)
           else if (strstr(desc,"{") && strstr(desc,"}"))
             desc = strtok(desc,"{}");
           else {
-            fprintf(stderr,"%s: %s line %d: garbage at end of line.\n",
+            fprintf(stderr,"%s: %s: line %d: garbage at end of line.\n",
                     argv0, filename, linenum);
             desc = strdup(cp);
           }
@@ -633,7 +633,7 @@ void read_config(root, homedir, username)
 
       /* check for garbage at EOL */
       if (strtok(NULL, WHITESPACE) != NULL)
-        fprintf(stderr,"%s: %s line %d: garbage at end of line.\n",
+        fprintf(stderr,"%s: %s: line %d: garbage at end of line.\n",
                 argv0, filename, linenum);
     } /* else */
   } /* while */
