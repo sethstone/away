@@ -76,9 +76,14 @@ short RCFILE_OP = 0;
 short MAIL_OP = 0;
 short NORCFILE_OP = 0;
 
-/* global variables */
-char *found_in = NULL, *away_time = 0;
-short pam_active = 0, mail_found = 0, notified  = 0;
+/* turned on while trying to authenticate the user */
+short pam_active = 0;
+/* mail was found */
+short mail_found = 0;
+/* the user has already been notified */
+short notified  = 0;
+/* name of mailbox new mail was found in */
+char *found_in = NULL;
 
 /* PAM conversation struct */
 static struct pam_conv conv = { misc_conv, NULL };
@@ -90,7 +95,6 @@ typedef enum {
   oMailbox,
   oPersist,
   oTime,
-  oWait,
   oBadCmd
 } CmdCodes;
 static struct {
@@ -102,7 +106,6 @@ static struct {
   { "mailbox", oMailbox },
   { "persist", oPersist },
   { "time", oTime },
-  { "wait", oWait },
   { NULL, 0 }
 };
 
