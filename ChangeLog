@@ -4,12 +4,12 @@ Changes from 0.9.4 to 0.9.6:
   - added autoconf support
   - added persist code
   - changed source directory layout
-  - fixed a major bug from not handling SIGHUP
   - fixed error reporting to be GNU compatible
   - fixed help and version output to be GNU compatible
   - fixed function definitions and prototypes to be GNU compatible
   - fixed handling of invalid command-line options
   - fixed handling of bogus rcfiles
+  - fixed pam.d file to work on more systems
 
 Changes from 0.9.2 to 0.9.4:
   - added and changed some command-line options
