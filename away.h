@@ -20,9 +20,10 @@
 #ifndef _AWAY_H
 #define _AWAY_H
 
-/* Away version number */
+/* version and contacts */
 #define VERSION "0.9.3"
 #define CONTACT "cameron@unbeatenpath.net"
+#define MLIST   "away@unbeatenpath.net"
 
 /* Separator for conf file */
 #define WHITESPACE " \t\n"
@@ -87,6 +88,7 @@ typedef enum {
   oMaildir,
   oMailbox,
   oPersist,
+  oTime,
   oWait,
   oBadCmd
 } CmdCodes;
@@ -97,6 +99,7 @@ static struct {
   { "maildir", oMaildir },
   { "mailbox", oMailbox },
   { "persist", oPersist },
+  { "time", oTime },
   { "wait", oWait },
   { NULL, 0 }
 };

@@ -119,7 +119,8 @@ void master(void) {
   /* build time string */
   awayTime = make_time();
   /* start mail checking thread */
-  pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, &mailboxRoot);
+  if (CHECK_MAIL != 0)
+    pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, &mailboxRoot);
 
   /* lock this sucka up */
   while (error) {
@@ -198,6 +199,7 @@ char *make_path(char *dirs, char *filename) {
 /* Version */
 void print_version(void) {
   printf("away v" VERSION " (c) Cameron Moore <" CONTACT ">\n");
+  printf("To contact the developers, please send mail to <" MLIST ">.\n");
   exit (0);
 }
 
@@ -408,8 +410,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
   char line[1024], filename[256];
   char *cp = NULL, *maildir = "";
   unsigned int linenum = 0, opcode;
-  short changed_wait_secs = 0;
-  short changed_persist = 0;
+  short changed_time = 0, changed_persist = 0;
 
   if (RCFILE_OP)
     snprintf(filename, sizeof filename, "%.200s", rcfile);
@@ -525,6 +526,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         }
         break;
 
+      case oTime:
       case oWait:
         /* if changed from command line */
         if (TIME_OP) {
@@ -532,9 +534,9 @@ void read_config(Mailbox **root, char *homedir, char *username) {
           break;
         }
         /* change TIME */
-        if (changed_wait_secs) {
+        if (changed_time) {
           cp = strtok(NULL, WHITESPACE);
-          fprintf(stderr,"%s line %d: multiple Wait commands.\n",
+          fprintf(stderr,"%s line %d: multiple Time commands.\n",
                   filename, linenum);
         } else {
           cp = strtok(NULL, WHITESPACE);
@@ -544,11 +546,11 @@ void read_config(Mailbox **root, char *homedir, char *username) {
           else if (atoi(cp) >= MIN_TIME) TIME = atoi(cp);
           else {
             fprintf(stderr,
-                    "%s line %d: Wait value less than minimum (%d).\n",
+                    "%s line %d: Time value less than minimum (%d).\n",
                     filename, linenum, MIN_TIME);
             TIME = MIN_TIME;
           }
-          changed_wait_secs = 1;
+          changed_time = 1;
         }
         break;
 
