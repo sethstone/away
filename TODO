@@ -2,7 +2,12 @@ TODO/WISHLIST for Away
 ----------------------
 Email suggestions to cameron@unbeatenpath.net
 
-- gracefully handle all relevent signals (SIGSEGV, etc)
+- store timestamps on mailboxes with new mail so we know when a
+  mailbox has been read (from another shell or whatever).  if the file
+  has been read, we can add it back to the list of files to check.
+
+- gracefully handle all system signals (SIGSEGV, etc).  clean up our
+  memory.
 
 - Possibly add a hook so that the path to a folder with new mail could
   be passed to an external command...then that command could print
@@ -10,7 +15,7 @@ Email suggestions to cameron@unbeatenpath.net
   this.
 
 - get code from the vlock program to disallow virtual terminal
-  switching
+  switching...not a priority.
 
 - Designate a signal to allow superuser authentication
 
