@@ -2,12 +2,7 @@ TODO/WISHLIST for Away
 ----------------------
 Email suggestions to cameron@unbeatenpath.net
 
-- store timestamps on mailboxes with new mail so we know when a
-  mailbox has been read (from another shell or whatever).  if the file
-  has been read, we can add it back to the list of files to check.
-
-- gracefully handle all system signals (SIGSEGV, etc).  clean up our
-  memory.
+- see if we can get around having to depend on the setenv() stuff.
 
 - Possibly add a hook so that the path to a folder with new mail could
   be passed to an external command...then that command could print
