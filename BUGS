@@ -6,6 +6,3 @@ Email bug reports to cameron@unbeatenpath.net
 
 * configure.in could use some work
 
-* mail thread is foobarred - not cycling through mailboxes; doesn't
-    sleep; code has been broken since the persist code was added
-

@@ -335,11 +335,12 @@ int new_mail(mb)
 void mail_thread_f(root)
   Mailbox **root;
 {
-  Mailbox *mb = *root;
+  Mailbox *mb;
   int slept = 0;
 
   while (1) {
-    while (!mail_found || PERSIST) {
+    mb = *root;
+    while (mb != NULL && (!mail_found || PERSIST)) {
       if (new_mail(mb)) {
         found_in = mb->desc;
         /* make sure the main process has *
@@ -350,6 +351,7 @@ void mail_thread_f(root)
           notified = 1;
         }
       }
+      mb = mb->next;
     } /* while */
     if (mail_found && !PERSIST) break;
     sleep(TIME);
