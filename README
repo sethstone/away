@@ -1,0 +1,123 @@
+
+                               Away
+                           -------------          
+                            Version 0.9
+
+    Away is a simple program that has three functions:  lets others
+    know you are away, locks your terminal, and checks for new mail.
+
+    Like many people (I assume), I always use the `w` command to see
+    what people are doing on a server.  I often need to talk with
+    someone online, and it drives me bonkers to see them online but
+    idle for two+ hours.  Then I'm stuck with the decision of "should I
+    wait a few minutes and see if they do something?" or "should I just
+    email them since I know they won't be back for another two hours?"
+    Well, to combat this problem, I started this project.  My primary
+    goal with writing Away was very simple:  write a program to take
+    the place of "-bash" (or whatever shell you hold dear to your
+    heart) in the `w` command's "WHAT" column.
+
+    Away will also check for new mail every 5 minutes and will notify
+    you once new mail is found.  Once Away finds that you have new mail
+    in any file, it will stop checking for newer mail.  See the
+    "Configuration" section for more information on setting up multiple
+    mailboxes to be checked besides the default $INBOX file.
+
+    Away also uses PAM to lock your terminal the way xlock or xlockmore
+    locks an X11 session.
+
+    See the file COPYING for copyright and warranty information.
+
+
+    Installation
+    ------------
+
+    $ tar zxvf away-x.y.tar.gz
+      - or -
+      tar yxvf away-x.y.tar.bz2
+      - or -
+      tar Ixvf away-x.y.tar.bz2
+    $ cd away-x.y/
+    $ make
+    $ su -c "make install"
+    $ su -c "make pam-install"
+
+    There's nothing fancy about that pam-install command.  It just
+    copies the away.pam file to /etc/pam.d/.  If you have an older
+    version of PAM, you may need to add the relevant lines to your
+    PAM configuration file manually.
+
+
+    Configuration
+    -------------
+
+    Each user may have an '.awayrc' configuration file in their home
+    directory.  For a description and example of the rc file, see the
+    'awayrc' file distributed in this package.
+
+
+    Usage
+    -----
+
+    Once you get Away set up, it is very easy to use.  It accepts as
+    many parameters as you want to through at it, and these parameters
+    become part of your away message.  For example:
+
+        $ away reading Slashdot
+        $ away ...
+        $ away playing games
+
+    You may also use the -m operator to make away appear to execute
+    as another name, hence removing the "away -m" part of the command.
+    For example,
+
+        $ away -m playing games
+
+    will only show "playing games" in the `w` and `ps` output.
+
+    I've also found that symbolic links work great with away.  I used
+    to use this a lot before Seth sent me a patch for the -m option.
+    If you just want to be lazy and not have to do the -m option for
+    the same message all the time, you might like this method:
+
+        $ cd ~/bin
+        $ ln -s reading /usr/local/bin/away
+        $ reading /.
+
+
+    Contributers
+    ------------
+
+    Seth Stone (pepper@initzero.net) suggested the locking
+        functionality and sent me the -m patch.  Thanks Seth!
+
+    Cameron Moore (cameron@unbeatenpath.net) is me, the originator of
+        project.  Most of my success can be attributed to the GPL.
+        Open source is a good thing.  *grin*
+
+
+    Latest Versions
+    ---------------
+
+    The latest version of Away can be found at the following
+    location:
+
+        http://unbeatenpath.net/software/away/
+
+    There are other places to get Away (no pun intended):
+
+        ftp://ftp.wtlug.org/pub/away/
+        http://www.wtlug.org/
+
+    Special thanks to the guys at WTLUG.
+
+
+    Contact
+    -------
+
+    If you have any questions, comments, enhancements, or a desire
+    to donate money to a broke college student, please email me, and
+    I'll try to get back to you as soon as possible.  Thanks.
+
+    Cameron Moore
+    cameron@unbeatenpath.net

@@ -1,0 +1,31 @@
+# Configuration File for Away
+# (http://www.unbeatenpath.net/software/away/)
+#
+# Syntax:
+#   Valid commands are:  Wait, Maildir, Mailbox.
+#
+#   Wait - the time in seconds to wait between checking for new mail.
+#   The syntax is:
+#
+#       Wait SECS
+#
+#   Maildir - you may have multiple Maildir sections.  The syntax is:
+#
+#       Maildir PATH
+#
+#   Mailbox - you may have multiple Mailbox lines in a Maildir section
+#   along with an optional description of the Mailbox.  If no
+#   description is given, the filename is used.  The syntax is:
+#
+#       Mailbox FILENAME {DESCRIPTION}
+#
+#   Lines starting with # are comments.  Whitespace is ignored (except
+#   in a Mailbox description. Option names are case-insensitive.
+#
+# Examples:
+#   wait 600
+#   maildir /var/spool/mail
+#    mailbox johndoe                {your Inbox}
+#   maildir /home/johndoe/mail
+#    mailbox linux-security         {Linux Security}
+#    mailbox mutt-announce          {Mutt Announce}

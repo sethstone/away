@@ -1,0 +1,37 @@
+.\" Process this file with
+.\" groff -man -Tascii away.1
+.\"
+.TH away 1 "October 2000" Linux "User Manuals"
+.SH NAME
+away \- terminal locking application
+.SH SYNOPSIS
+.B away [--help] [-m]
+.I message
+.B [...]
+.SH DESCRIPTION
+.B away
+is a simple program that locks your terminal, checks for new mail
+in any given number of mailboxes, and lets other users know why
+you are inactive.
+.SH OPTIONS
+.IP --help
+Display help.
+.IP -m
+Execute as the remainder of the command line, effectively stripping
+off the executable name and additional switches.
+.SH FILES
+.I ~/.awayrc
+.RS
+Per user configuration file. See
+.BR awayrc (5)
+for further details.
+.RE
+
+.I /etc/pam.d/away
+.RS
+The
+.B Linux-PAM
+configuration file.
+.RE
+.SH AUTHORS
+Cameron Moore <cameron@unbeatenpath.net>, and others.

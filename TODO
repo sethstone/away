@@ -1,0 +1,22 @@
+TODO/WISHLIST for Away
+----------------------
+Email suggestions to cameron@unbeatenpath.net
+
+- create -c command line option to specify a different rc file
+
+- create -p and [Persist] option to command line and rc file to allow
+  persistent checking of mailboxes.  ie., when mail is found in "foo",
+  away continues checking for mail in all other mailboxes.  default to
+  yes.
+
+- Possibly add a hook so that the path to a folder with new mail could
+  be passed to an external command...then that command could print
+  whatever message the user wants to conjure up
+
+- GNU-ize (create a configure script, etc; migrate to /data and /src
+  directory structure)
+
+- Make the `make pam-install` smarter (prolly handled by above)
+
+- Maildir folder support (primarily for systems with qmail)
+

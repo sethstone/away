@@ -1,0 +1,18 @@
+Changes from 0.2.0 to 0.9.0:
+  - finally created a stinkin header file
+  - cleaned and optimized code (as if it were SETI@Home or something)
+  - integrated Seth's -m patch
+
+Changes from 0.1.0 to 0.2.0:
+  - added ability to use an .awayrc config file
+  - added linked list to allow multiple mailboxes
+  - added the version number to the --help output
+  - added the number of secs between each new mail check to the --help output
+  - created away.h and moved relevant code to it
+  - changed the --help message layout
+  - fixed retrieval of username (was relying on env $USER...uck!)
+
+Changes from 0.0.1 to 0.1.0:
+  - added terminal locking code and threading associated with it
+  - fixed a problem with looking up the username from a xterm
+

@@ -1,0 +1,66 @@
+.\" Copyright (C) 1999-2000 Cameron Moore
+.\"
+.\" This program is free software; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License
+.\" as published by the Free Software Foundation; either version 2
+.\" of the License, or (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program; if not, write to the Free Software
+.\" Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+.\" Or try here: http://www.fsf.org/copyleft/gpl.html
+.\"
+.TH awayrc 5 "October 2000" Linux "User Manuals"
+.SH NAME
+awayrc \- configuration file for Away
+.SH DESCRIPTION
+An away configuration file consists of a series of commands.
+Each line of the may contain only one command.  Command names are
+case-insensitive.  Commands and arguments are separated by spaces.
+
+The hash mark, or pound sign ("#"), is used as a comment character.
+You can use it to annotate your configuration file.  All text after
+the comment character to the end of the line is ignored.
+.SH COMMANDS
+.IP wait
+The number of seconds to wait before checking for new mail.  The
+default is 600 seconds (five minutes).  The value must be greater
+than the minimum set at compile time.  The only argument is the
+number of seconds to wait.
+.IP maildir
+A path where subsequent
+.B mailbox
+declarations will be located.  The only argument is the path itself.
+.IP mailbox
+A file that should be checked for "new mail."  The filename will be
+appended to the previous
+.B maildir
+declaration.  An optional description of the mailbox may be supplied.
+If the description contains a space, the entire description must be
+enclosed in braces, "{" and "}".
+.SH EXAMPLE
+wait 60
+
+maildir /var/spool/mail
+
+    mailbox johndoe                {your Inbox}
+
+maildir /home/johndoe/mail
+
+    mailbox linux-security         {Linux Security}
+
+    mailbox mutt-announce          {Mutt Announce}
+.SH FILES
+.I ~/.awayrc
+.RS
+Per user configuration file.
+.RE
+.SH SEE ALSO
+.BR away (1)
+.SH AUTHORS
+Cameron Moore <cameron@unbeatenpath.net>, and others.
