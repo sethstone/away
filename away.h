@@ -58,7 +58,7 @@
 char *conf_file = ".awayrc";
 
 /* min mail check interval */
-const int MIN_WAIT_SECS = 30;
+const int MIN_WAIT_SECS = 10;
 
 /* ... */
 int WAIT_SECS = 300;
