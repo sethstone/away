@@ -2,29 +2,22 @@ TODO/WISHLIST for Away
 ----------------------
 Email suggestions to cameron@unbeatenpath.net
 
-- create -c command line option to specify a different rc file
-
-- create -p and [Persist] option to command line and rc file to allow
-  persistent checking of mailboxes.  ie., when mail is found in "foo",
-  away continues checking for mail in all other mailboxes.  default to
-  yes.
-
-- gracefully handle signals (SIGSEGV, etc)
-
-- Designate a signal to allow superuser authentication
+- gracefully handle all relevent signals (SIGSEGV, etc)
 
 - Possibly add a hook so that the path to a folder with new mail could
   be passed to an external command...then that command could print
   whatever message the user wants to conjure up.  use -e option to do
   this.
 
+- get code from the vlock program to disallow virtual terminal
+  switching
+
+- Designate a signal to allow superuser authentication
+
 - GNU-ize (create a configure script, etc; migrate to /data and /src
   directory structure)
 
-- Make the `make pam-install` smarter (prolly handled by above)
+- Break up source into more files (help.[ch], mail.[ch], ...)
 
 - Maildir folder support (primarily for systems with qmail)
-
-- get code from the vlock program to disallow virtual terminal
-  switching
 
