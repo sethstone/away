@@ -77,13 +77,20 @@ short pamActive = 0, mailFound = 0, notified  = 0;
 static struct pam_conv conv = { misc_conv, NULL };
 
 /* rc file commands */
-typedef enum { oMaildir, oMailbox, oWait, oBadCmd } CmdCodes;
+typedef enum {
+  oMaildir,
+  oMailbox,
+  oPersist,
+  oWait,
+  oBadCmd
+} CmdCodes;
 static struct {
   const char *name;
   CmdCodes opcode;
 } commands[] = {
   { "maildir", oMaildir },
   { "mailbox", oMailbox },
+  { "persist", oPersist },
   { "wait", oWait },
   { NULL, 0 }
 };
