@@ -17,19 +17,6 @@
  * Or try here: http://www.fsf.org/copyleft/gpl.html
  */
 
-#include <security/pam_appl.h>
-#include <security/pam_misc.h>
-#include <sys/stat.h>
-#include <pthread.h>
-#include <string.h>
-#include <signal.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <paths.h>
-#include <stdio.h>
-#include <time.h>
-#include <pwd.h>
-#include <ctype.h>
 #include "away.h"
 
 int main(int argc, char *argv[]) {
@@ -43,8 +30,12 @@ int main(int argc, char *argv[]) {
     struct passwd *pw = NULL;
     Mailbox *mailboxRoot = NULL, *mb = NULL;
 
-    signal(SIGINT, SIG_IGN);
+    signal(SIGINT , SIG_IGN);
+    signal(SIGTERM, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
     signal(SIGTSTP, SIG_IGN);
+    signal(SIGUSR1, SIG_IGN);
+    signal(SIGUSR2, SIG_IGN);
  
     /* get home dir */
     pw = getpwuid(getuid());
