@@ -458,7 +458,8 @@ void set_defaults(root, name)
   Mailbox **root;
   char *name;
 {
-  add_mailbox(root, make_path(_PATH_MAILDIR, name), "INBOX"); }
+  add_mailbox(root, make_path(_PATH_MAILDIR, name), "INBOX");
+}
 
 /* Read Configuration File */
 void read_config(root, homedir, username)
