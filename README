@@ -48,14 +48,14 @@
 
     $ tar zxvf away-x.y.z.tar.gz
       - or -
-      tar yxvf away-x.y.z.tar.bz2
-      - or -
-      tar Ixvf away-x.y.z.tar.bz2
+      tar jxvf away-x.y.z.tar.bz2
     $ cd away-x.y.z/
     $ ./configure
     $ make
     $ su -c "make install"
 
+    note: older versions of tar may require a 'y' or 'I' for bzip2
+    (de)compression, rather than 'j' as shown above.
 
     Upgrading
     ---------
@@ -104,4 +104,4 @@
     Cameron Moore
     cameron@unbeatenpath.net
 
-    $Id: README,v 1.7 2002-08-11 06:23:26 hrothgar Exp $
+    $Id: README,v 1.8 2002-09-07 18:04:43 pepper Exp $
