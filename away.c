@@ -426,6 +426,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
   /* open rc file */
   f = fopen(filename, "r");
   if (!f) {
+    if (CONF_OP) { fprintf(stderr, "Could not open %s", filename); }
     /* if there is no rc file, assume they have a /var/spool/mail file */
     set_defaults(root, username);
     return;
@@ -447,7 +448,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         /* save the maildir for building paths to bailboxes */
         cp = strtok(NULL, WHITESPACE);
         if (!cp)
-          fprintf(stderr,"%.200s line %d: missing argument.\n",
+          fprintf(stderr,"%s line %d: missing argument.\n",
                   filename, linenum);
         else if (strcmp(cp,maildir) != 0) 
           if (cp[0] == '~') {
@@ -469,7 +470,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         /* append mailbox to maildir and save */
         cp = strtok(NULL, WHITESPACE);
         if (!cp)
-          fprintf(stderr,"%.200s line %d: missing argument.\n",
+          fprintf(stderr,"%s line %d: missing argument.\n",
                   filename, linenum);
         else if (strcmp(maildir,"") != 0) {
           char *desc = strtok(NULL, "\n");
@@ -477,14 +478,14 @@ void read_config(Mailbox **root, char *homedir, char *username) {
           else if (strstr(desc,"{") && strstr(desc,"}"))
             desc = strtok(desc,"{}");
           else {
-            fprintf(stderr,"%.200s line %d: garbage at end of line.\n",
+            fprintf(stderr,"%s line %d: garbage at end of line.\n",
                     filename, linenum);
             desc = strdup(cp);
           }
           add_mailbox(root, make_path(maildir,cp), desc);
         } else {
           fprintf(stderr,
-                  "%.200s line %d: Mailbox option needs a Maildir parent.\n",
+                  "%s line %d: Mailbox option needs a Maildir parent.\n",
                   filename, linenum);
         }
         break;
@@ -497,12 +498,12 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         }
         if (changed_persist) {
           cp = strtok(NULL, WHITESPACE);
-          fprintf(stderr,"%.200s line %d: multiple Persist commands.\n",
+          fprintf(stderr,"%s line %d: multiple Persist commands.\n",
                   filename, linenum);
         } else {
           cp = strtok(NULL, WHITESPACE);
           if (!cp)
-            fprintf(stderr,"%.200s line %d: missing argument.\n",
+            fprintf(stderr,"%s line %d: missing argument.\n",
                     filename, linenum);
           else if (strcasecmp(cp,"yes") == 0 || atoi(cp) == 1)
             PERSIST = 1;
@@ -510,7 +511,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
             PERSIST = 0;
           else {
             fprintf(stderr,
-                    "%.200s line %d: Invalid Persist argument (%.200s).\n",
+                    "%s line %d: Invalid Persist argument (%.200s).\n",
                     filename, linenum, cp);
           }
           changed_persist = 1;
@@ -526,17 +527,17 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         /* change WAIT_SECS */
         if (changed_wait_secs) {
           cp = strtok(NULL, WHITESPACE);
-          fprintf(stderr,"%.200s line %d: multiple Wait commands.\n",
+          fprintf(stderr,"%s line %d: multiple Wait commands.\n",
                   filename, linenum);
         } else {
           cp = strtok(NULL, WHITESPACE);
           if (!cp)
-            fprintf(stderr,"%.200s line %d: missing argument.\n",
+            fprintf(stderr,"%s line %d: missing argument.\n",
                     filename, linenum);
           else if (atoi(cp) >= MIN_WAIT_SECS) WAIT_SECS = atoi(cp);
           else {
             fprintf(stderr,
-                    "%.200s line %d: Wait value less than minimum (%d).\n",
+                    "%s line %d: Wait value less than minimum (%d).\n",
                     filename, linenum, MIN_WAIT_SECS);
             WAIT_SECS = MIN_WAIT_SECS;
           }
@@ -550,7 +551,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
 
       /* check for garbage at EOL */
       if (strtok(NULL, WHITESPACE) != NULL)
-        fprintf(stderr,"%.200s line %d: garbage at end of line.\n",
+        fprintf(stderr,"%s line %d: garbage at end of line.\n",
                 filename, linenum);
     } /* else */
   } /* while */
