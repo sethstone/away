@@ -52,6 +52,7 @@
       - or -
       tar Ixvf away-x.y.z.tar.bz2
     $ cd away-x.y.z/
+    $ ./configure
     $ make
     $ su -c "make install"
 
