@@ -116,8 +116,6 @@ void master(void) {
   if (!pw) { fprintf(stderr, "You don't exist!\n"); exit(1); }
   read_config(&mailboxRoot, pw->pw_dir, pw->pw_name);
 
-  /* build time string */
-  away_time = make_time();
   /* start mail checking thread */
   if (CHECK_MAIL != 0)
     pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, &mailboxRoot);
@@ -191,7 +189,12 @@ char *make_path(char *dirs, char *filename) {
 
 /* Version */
 void print_version(void) {
-  printf("away v" VERSION " (c) Cameron Moore <" CONTACT ">\n");
+  printf("Away " VERSION "\n");
+  printf("Copyright (c) 1999, 2000 Cameron Moore <" CONTACT ">\n");
+  printf("Away comes with NO WARRANTY, to the extent permitted by law.\n");
+  printf("You may redistribute copies of Away under the terms of the\n");
+  printf("GNU General Public License.  For more information about these\n");
+  printf("matters, see the files named COPYING.\n\n");
   printf("To contact the developers, please send mail to <" MLIST ">.\n");
   exit (0);
 }
@@ -223,13 +226,14 @@ void ext_help(char *argv0) {
   printf("  -T, --notime            ignore any options to set the time interval\n");
   printf("                          and use the default of %d seconds\n",
          TIME);
-  printf("  -v, --version           display version information\n\n");
-  print_version(); // exits
+  printf("  -v, --version           display version copyright information\n\n");
+  printf("Report bugs to " MLIST ".\n");
+  exit (0);
 }
 
 /* Stall */
 void stall(void) {
-  printf("\n       You went away at %.20s",away_time);
+  printf("\n       You went away at %.20s", make_time());
   printf("\n\n -- Press [Enter] to come back online --\n");
   getchar();
 }
@@ -556,7 +560,6 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         break;
 
       case oTime:
-      case oWait:
         /* if changed from command line */
         if (TIME_OP) {
           cp = strtok(NULL, "\n");
