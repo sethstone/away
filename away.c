@@ -117,7 +117,7 @@ void master(void) {
   read_config(&mailboxRoot, pw->pw_dir, pw->pw_name);
 
   /* build time string */
-  awayTime = make_time();
+  away_time = make_time();
   /* start mail checking thread */
   if (CHECK_MAIL != 0)
     pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, &mailboxRoot);
@@ -126,23 +126,23 @@ void master(void) {
   while (error) {
     stall();
     /* authenticate the user */
-    pamActive = 1;
+    pam_active = 1;
     error = authenticate(pw->pw_name);
-    pamActive = 0;
+    pam_active = 0;
     /* on invalid passwd */
     if (error) {
       printf("\a** Invalid password **\n");
       /* mail was found during authentication... */
-      if ((!notified) && (mailFound)) {
-        printf("\a\n       You have new mail in %.200s.\n", foundIn);
+      if ((!notified) && (mail_found)) {
+        printf("\a\n       You have new mail in %.200s.\n", found_in);
         notified = 1;
       }
     }
   } /* while */
 
   /* mail was found during authentication... */
-  if ((!notified) && (mailFound))
-    printf("\a\n       You have new mail in %.200s.\n", foundIn);
+  if ((!notified) && (mail_found))
+    printf("\a\n       You have new mail in %.200s.\n", found_in);
   salutations();
   /* clean up LL */
   mb = mailboxRoot;
@@ -236,7 +236,7 @@ void ext_help(char *argv0) {
 
 /* Stall */
 void stall(void) {
-  printf("\n       You went away at %.20s",awayTime);
+  printf("\n       You went away at %.20s",away_time);
   printf("\n\n -- Press [Enter] to come back online --\n");
   getchar();
 }
@@ -278,7 +278,7 @@ short new_mail(Mailbox *mb) {
       fprintf(stderr, "Could not open %s: access denied\n", mb->path);
     else
       fprintf(stderr, "Could not open %s\n", mb->path);
-    mailFound = 0;
+    mail_found = 0;
   } else if (status.st_size != 0) {
     mailrecv = status.st_mtime;
     mailread = status.st_atime;
@@ -286,9 +286,9 @@ short new_mail(Mailbox *mb) {
 
   if ((mailread < mailrecv) && (mb->mtime != mailrecv)) {
     mb->mtime = mailrecv;
-    return mailFound = 1;
+    return mail_found = 1;
   } else {
-    return mailFound = 0;
+    return mail_found = 0;
   }
 }
 
@@ -298,19 +298,19 @@ void mail_thread_f(Mailbox **root) {
   short slept = 0;
 
   while (1) {
-    while (!mailFound || PERSIST) {
+    while (!mail_found || PERSIST) {
       if (new_mail(mb)) {
-        foundIn = mb->desc;
+        found_in = mb->desc;
         /* make sure the main process has *
          * time to outputs its stuff...   */
         if (!slept) { sleep(1); slept++; }
-        if (!pamActive) {
-          printf("\a\n       You have new mail in %.200s.\n", foundIn);
+        if (!pam_active) {
+          printf("\a\n       You have new mail in %.200s.\n", found_in);
           notified = 1;
         }
       }
     } /* while */
-    if (mailFound && !PERSIST) break;
+    if (mail_found && !PERSIST) break;
     sleep(TIME);
   }
 

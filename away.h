@@ -77,8 +77,8 @@ short MAIL_OP = 0;
 short NORCFILE_OP = 0;
 
 /* global variables */
-char *foundIn = NULL, *awayTime = 0;
-short pamActive = 0, mailFound = 0, notified  = 0;
+char *found_in = NULL, *away_time = 0;
+short pam_active = 0, mail_found = 0, notified  = 0;
 
 /* PAM conversation struct */
 static struct pam_conv conv = { misc_conv, NULL };
