@@ -57,6 +57,13 @@
     $ su -c "make install"
 
 
+    Upgrading
+    ---------
+
+    See the file NEWS for information on major changes and differences
+    between versions.
+
+
     Configuration
     -------------
 
