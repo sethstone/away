@@ -1,0 +1,13 @@
+Source: away
+Section: console
+Priority: optional
+Maintainer: Cameron Moore <cameron@unbeatenpath.net>
+Standards-Version: 3.0.1
+
+Package: away
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: A console-locking, mail-checking, place keeper
+  Away is a simple program that has three functions:  lets others
+  know you are away, locks your terminal, and checks for new mail
+  in a configurable set of mailboxes.
