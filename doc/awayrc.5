@@ -44,16 +44,17 @@ declaration.  An optional description of the mailbox may be supplied.
 If the description contains a space, the entire description must be
 enclosed in braces, "{" and "}".
 .SH EXAMPLE
+.nf
+# check mail every 60 seconds
 wait 60
 
+# inbox
 maildir /var/spool/mail
-
     mailbox johndoe                {your Inbox}
 
+# procmail folders
 maildir /home/johndoe/mail
-
     mailbox linux-security         {Linux Security}
-
     mailbox mutt-announce          {Mutt Announce}
 .SH FILES
 .I ~/.awayrc
