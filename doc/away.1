@@ -17,9 +17,9 @@
 .\"
 .TH away 1 "October 2000" Linux "User Manuals"
 .SH NAME
-away \- terminal locking application
+away \- terminal locking program
 .SH SYNOPSIS
-.B away [--help] [-m]
+.B away [OPTIONS]
 .I message
 .B [...]
 .SH DESCRIPTION
@@ -28,11 +28,25 @@ is a simple program that locks your terminal, checks for new mail
 in any given number of mailboxes, and lets other users know why
 you are inactive.
 .SH OPTIONS
-.IP --help
+.IP "-c, --conf=FILE"
+Specify an alternative configuration file instead of the default
+~/.awayrc file.
+.IP "-h, --help"
 Display help.
-.IP -m
+.IP "-m, --message"
 Execute as the remainder of the command line, effectively stripping
 off the executable name and additional switches.
+.IP "-p, --persist"
+Continue checking for new mail as long as there is at least one mailbox
+that has not received new mail.
+.IP "-P, --nopersist"
+Stop checking mail if any mailbox is found to have new mail.
+.IP "-w, --wait=SECS"
+Set how long, in seconds, the program waits between mail checks.
+.IP "-W, --nowait"
+Ignore any changes to the wait time and use the default time period.
+.IP "-v, --version"
+Display version information.
 .SH FILES
 .I ~/.awayrc
 .RS
