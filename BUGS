@@ -8,3 +8,5 @@ Email bug reports to cameron@unbeatenpath.net
 
 * need to add autoconf substitution of version numers in data/ and doc/
 
+* data/Makefile.am doesn't install PAM policy file
+
