@@ -5,5 +5,5 @@ if [ -f Makefile ];then
 fi
 rm `find . -name Makefile`
 rm `find . -name Makefile.in`
-rm COPYING INSTALL aclocal.m4 config.* configure install-sh missing mkinstalldirs stamp-h*
+rm COPYING INSTALL aclocal.m4 config.* configure install-sh missing mkinstalldirs stamp-h* away.spec
 
