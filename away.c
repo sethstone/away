@@ -26,12 +26,14 @@ int main(int argc, char **argv) {
   short mesg_exec = 0;
   short restart = 0;
 
+  /*
   signal(SIGINT , SIG_IGN);
   signal(SIGTERM, SIG_IGN);
   signal(SIGQUIT, SIG_IGN);
   signal(SIGTSTP, SIG_IGN);
   signal(SIGUSR1, SIG_IGN);
   signal(SIGUSR2, SIG_IGN);
+  */
  
   if (argc == 1) { short_help(argv[0]); }
   while ((c = getopt_long(argc, argv, "c:mhpPw:Wv", long_options, &option_index)) && c != -1) {
@@ -268,19 +270,65 @@ short new_mail(char *path) {
     return mailFound = 0;
 }
 
+Mailbox *ll_delete(Mailbox *cur) { return NULL; }
+
 /* Mail Thread Function */
 void mail_thread_f(Mailbox *root) {
   Mailbox *mb = NULL;
+  Mailbox *last = NULL;
   short found_mail = 0;
+  short slept = 0;
 
-  while (!found_mail) {
-    for (mb = root; !found_mail && mb != NULL; mb = mb->next) {
+  while (1) {
+    short deleted_root = 0;
+
+int i = 1;    
+
+    mb = root;
+    while ((!found_mail || PERSIST) && mb != NULL) {
+      short incr = 1;
+
+printf("-* %d:%s *-\n",i++,mb->path);
+
       if (new_mail(mb->path)) {
         found_mail = 1;
         foundIn = mb->desc;
+
+        /* make sure the main process has *
+         * time to outputs its stuff...   */
+        if (!slept) { sleep(1); slept++; }
+        if (!pamActive) {
+          printf("\a\n       You have new mail in %.200s.\n", foundIn);
+          notified = 1;
+        }
+
+!! FIXME - getting SIGSEGV when last two have new mail...
+
+        if (!PERSIST) break;
+        else {
+          Mailbox *tmp = mb;
+          incr = 0;
+
+          if (mb == root) {
+            deleted_root = 1;
+            root = mb = mb->next;
+          } else last->next = mb = mb->next;
+
+          /* free */
+          if (tmp->path != NULL) free(tmp->path);
+          free(tmp);
+        }
       }
-    }
-    if (!found_mail) sleep(WAIT_SECS);
+      /* don't go to the next mb if we deleted one */
+      if (incr) {
+        if (!deleted_root) last = mb;
+        mb = mb->next;
+      }
+
+    } /* while */
+    if (found_mail && !PERSIST) break;
+    last = NULL;
+    sleep(WAIT_SECS);
   }
 
   /* sleep for 1 second to make sure the *
@@ -546,9 +594,5 @@ void check_env(void) {
     PERSIST_OP = 1;
     unsetenv(AWAY_PERSIST);
   }
-
-  printf("conf_file=%s\n",conf_file);
-  printf("WAIT_SECS=%d\n",WAIT_SECS);
-  printf("PERSIST  =%d\n",PERSIST);
 }
 
