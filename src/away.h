@@ -23,6 +23,49 @@
 /* ./configure help */
 #include "../config.h"
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
+#include <stdio.h>
+
+#ifdef   STDC_HEADERS
+# include <stdlib.h>
+# include <string.h>
+#else
+# ifndef HAVE_STRDUP
+#  define strdup(x) calc_strdup((CONST char *)(x))
+# endif //HAVE_STRDUP
+# ifndef HAVE_STRSPN
+//#  define strspn(x) ????
+# endif
+#endif //STDC_HEADERS
+
+#ifdef   HAVE_UNISTD_H
+# include <unistd.h>
+#endif //HAVE_UNISTD_H
+
+#ifdef   TM_IN_SYS_TIME
+# include <sys/time.h>
+#else
+# include <time.h>
+#endif //TIM_IN_SYS_TIME
+
+#include <paths.h>
+#include <pwd.h>
+#include <ctype.h>
+#include <signal.h>
+#include <getopt.h>
+#include <pthread.h>
+#include <sys/stat.h>
+#include <security/pam_appl.h>
+#include <security/pam_misc.h>
+
+
+/*
+ * DEFINES
+ */
+
 /* contacts */
 #define CONTACT "cameron@unbeatenpath.net"
 #define MLIST   "away@unbeatenpath.net"
@@ -43,37 +86,6 @@
 #define AWAY_NOTIME       "AWAY_NOTIME"
 #define AWAY_MAIL         "AWAY_MAIL"
 #define AWAY_PERSIST      "AWAY_PERSIST"
-
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif
-
-#include <stdio.h>
-
-#ifdef   STDC_HEADERS
-#include <stdlib.h>
-#include <string.h>
-#endif //STDC_HEADERS
-
-#ifdef   HAVE_UNISTD_H
-#include <unistd.h>
-#endif //HAVE_UNISTD_H
-
-#ifdef   TM_IN_SYS_TIME
-#include <sys/time.h>
-#else
-#include <time.h>
-#endif //TIM_IN_SYS_TIME
-
-#include <paths.h>
-#include <pwd.h>
-#include <ctype.h>
-#include <signal.h>
-#include <getopt.h>
-#include <pthread.h>
-#include <sys/stat.h>
-#include <security/pam_appl.h>
-#include <security/pam_misc.h>
 
 /* Default conf file name */
 char *rcfile = ".awayrc";
