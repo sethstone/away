@@ -2,17 +2,21 @@ TODO/WISHLIST for Away
 ----------------------
 Email suggestions to cameron@unbeatenpath.net
 
-- see if we can get around having to depend on the setenv() stuff.
+- See if we can get around having to depend on the setenv() stuff or at
+  least consolidate the vars into on single var.
+
+- Add option to disable mail checking (lock only)
 
 - Possibly add a hook so that the path to a folder with new mail could
   be passed to an external command...then that command could print
   whatever message the user wants to conjure up.  use -e option to do
   this.
 
-- get code from the vlock program to disallow virtual terminal
+- Get code from the vlock program to disallow virtual terminal
   switching...not a priority.
 
-- Designate a signal to allow superuser authentication
+- Designate a signal to allow superuser authentication.  This would
+  prevent some luser from locking all of the VTs.
 
 - GNU-ize (create a configure script, etc; migrate to /data and /src
   directory structure)
