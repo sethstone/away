@@ -593,6 +593,9 @@ void read_config(Mailbox **root, char *homedir, char *username) {
     } /* else */
   } /* while */
   fclose(f);
+
+  /* if no mailboxes where setup, add system inbox */
+  if (CHECK_MAIL && root == NULL) { set_defaults(root, username); }
 }
 
 /* Re-execute */
