@@ -21,7 +21,8 @@
 #define _AWAY_H
 
 /* Away version number */
-#define VERSION "0.9.1"
+#define VERSION "0.9.3"
+#define CONTACT "cameron@unbeatenpath.net"
 
 /* Separator for conf file */
 #define WHITESPACE " \t\n"
@@ -33,9 +34,11 @@
 #define FILE_NAME_LEN 1024
 
 /* ENV variable names */
-#define AWAY_CONF_FILE    "AWAY_CONF_FILE"
-#define AWAY_WAIT_SECS    "AWAY_WAIT_SECS"
-#define AWAY_NO_WAIT      "AWAY_NO_WAIT"
+#define AWAY_RCFILE       "AWAY_RCFILE"
+#define AWAY_NORCFILE     "AWAY_NORCFILE"
+#define AWAY_TIME         "AWAY_TIME"
+#define AWAY_NOTIME       "AWAY_NOTIME"
+#define AWAY_MAIL         "AWAY_MAIL"
 #define AWAY_PERSIST      "AWAY_PERSIST"
 
 #define _GNU_SOURCE
@@ -55,19 +58,22 @@
 #include <security/pam_misc.h>
 
 /* Default conf file name */
-char *conf_file = ".awayrc";
+char *rcfile = ".awayrc";
 
 /* min mail check interval */
-const int MIN_WAIT_SECS = 10;
+const int MIN_TIME = 10;
 
-/* ... */
-int WAIT_SECS = 300;
-int PERSIST = 1;
+/* Default settings */
+int TIME = 300;
+short PERSIST = 1;
+short CHECK_MAIL = 1;
 
 /* flags to allow command line options to override conf file options */
-short WAIT_OP = 0;
+short TIME_OP = 0;
 short PERSIST_OP = 0;
-short CONF_OP = 0;
+short RCFILE_OP = 0;
+short MAIL_OP = 0;
+short NORCFILE_OP = 0;
 
 /* global variables */
 char *foundIn = NULL, *awayTime = 0;
@@ -106,13 +112,16 @@ typedef struct mailbox {
 /* command line options for getopt */
 static struct option long_options[] =
 {
-  {"conf", 1, 0, 'c'},
-  {"message", 0, 0, 'm'},
   {"help", 0, 0, 'h'},
+  {"mail", 0, 0, 'c'},
+  {"message", 0, 0, 'm'},
+  {"nomail", 0, 0, 'C'},
   {"nopersist", 0, 0, 'P'},
-  {"nowait", 0, 0, 'W'},
+  {"norcfile", 0, 0, 'F'},
+  {"notime", 0, 0, 'T'},
   {"persist", 0, 0, 'p'},
-  {"wait", 1, 0, 'w'},
+  {"rcfile", 1, 0, 'f'},
+  {"time", 1, 0, 't'},
   {"version", 0, 0, 'v'},
   {0, 0, 0, 0}
 };

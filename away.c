@@ -35,19 +35,31 @@ int main(int argc, char **argv) {
   signal(SIGUSR2, SIG_IGN);
  
   if (argc == 1) { short_help(argv[0]); }
-  while ((c = getopt_long(argc, argv, "c:mhpPw:Wv", long_options, &option_index)) && c != -1) {
+  while ((c = getopt_long(argc, argv, "cCf:FhmpPt:Tv", long_options, &option_index)) && c != -1) {
     restart = 1;
     switch (c) {
       case 'c':
-        setenv(AWAY_CONF_FILE, (char *)strdup(optarg), 1);
+        setenv(AWAY_MAIL, "1", 1);
+        option_count++;
+        break;
+      case 'C':
+        setenv(AWAY_MAIL, "0", 1);
+        option_count++;
+        break;
+      case 'f':
+        setenv(AWAY_RCFILE, (char *)strdup(optarg), 1);
         option_count += strchr(argv[option_count],'=') ? 1 : 2;
         break;
-      case 'm':
-        mesg_exec = 1;
+      case 'F':
+        setenv(AWAY_NORCFILE, "1", 1);
         option_count++;
         break;
       case 'h':
         ext_help(argv[0]);
+        break;
+      case 'm':
+        mesg_exec = 1;
+        option_count++;
         break;
       case 'p':
         setenv(AWAY_PERSIST, "1", 1);
@@ -57,13 +69,13 @@ int main(int argc, char **argv) {
         setenv(AWAY_PERSIST, "0", 1);
         option_count++;
         break;
-      case 'w':
-        if (atoi(optarg) >= MIN_WAIT_SECS)
-          setenv(AWAY_WAIT_SECS, (char *)strdup(optarg), 1);
+      case 't':
+        if (atoi(optarg) >= MIN_TIME)
+          setenv(AWAY_TIME, (char *)strdup(optarg), 1);
         option_count += strchr(argv[option_count],'=') ? 1 : 2;
         break;
-      case 'W':
-        setenv(AWAY_NO_WAIT, "1", 1);
+      case 'T':
+        setenv(AWAY_NOTIME, "1", 1);
         option_count++;
         break;
       case 'v':
@@ -185,8 +197,7 @@ char *make_path(char *dirs, char *filename) {
 
 /* Version */
 void print_version(void) {
-  fprintf(stderr, "away v"
-    VERSION " (c) Cameron Moore <cameron@unbeatenpath.net>\n");
+  printf("away v" VERSION " (c) Cameron Moore <" CONTACT ">\n");
   exit (0);
 }
 
@@ -200,7 +211,10 @@ void short_help(char *argv0) {
 void ext_help(char *argv0) {
   printf("Usage: %s [OPTIONS] message [...]\n", argv0);
   printf("A terminal locking program.\n\n");
-  printf("  -c, --conf=FILE         specifies an alternative configuration file\n");
+  printf("  -c, --mail              enable checking of mail\n");
+  printf("  -C, --nomail            disable checking of mail\n");
+  printf("  -f, --rcfile=FILE       specifies an alternative configuration file\n");
+  printf("  -F, --norcfile          ignore user configuration file\n");
   printf("  -h, --help              display this help information\n");
   printf("  -m, --message           execute showing only the message passed\n");
   printf("                          to the program\n");
@@ -209,13 +223,13 @@ void ext_help(char *argv0) {
   printf("                          recieved new mail\n");
   printf("  -P, --nopersist         stop checking mail if any mailbox is found\n");
   printf("                          to have new mail\n");
-  printf("  -w, --wait=SECONDS      sets how long the program waits between\n");
-  printf("                          mail checks\n");
-  printf("  -W, --nowait            use the default wait time of %d seconds\n",
-         WAIT_SECS);
-  printf("  -v, --version           display version information\n");
-  printf("\naway v" VERSION " (c) Cameron Moore <cameron@unbeatenpath.net>\n");
-  exit (0);
+  printf("  -t, --time=SECONDS      sets the time interval by which the program\n");
+  printf("                          performs is background tasks\n");
+  printf("  -T, --notime            ignore any options to set the time interval\n");
+  printf("                          and use the default of %d seconds\n",
+         TIME);
+  printf("  -v, --version           display version information\n\n");
+  print_version(); // exits
 }
 
 /* Stall */
@@ -295,7 +309,7 @@ void mail_thread_f(Mailbox **root) {
       }
     } /* while */
     if (mailFound && !PERSIST) break;
-    sleep(WAIT_SECS);
+    sleep(TIME);
   }
 
   /* exit the thread */
@@ -397,14 +411,14 @@ void read_config(Mailbox **root, char *homedir, char *username) {
   short changed_wait_secs = 0;
   short changed_persist = 0;
 
-  if (CONF_OP)
-    snprintf(filename, sizeof filename, "%.200s", conf_file);
+  if (RCFILE_OP)
+    snprintf(filename, sizeof filename, "%.200s", rcfile);
   else
-    snprintf(filename, sizeof filename, "%.100s/%.100s", homedir,conf_file);
+    snprintf(filename, sizeof filename, "%.100s/%.100s", homedir,rcfile);
 
   /* check for existance of conf file */
   if (access(filename, F_OK) == -1) {
-    if (CONF_OP) {
+    if (RCFILE_OP) {
       fprintf(stderr, "Could not open %s: file does not exist\n", filename);
     }
     set_defaults(root, username);
@@ -513,11 +527,11 @@ void read_config(Mailbox **root, char *homedir, char *username) {
 
       case oWait:
         /* if changed from command line */
-        if (WAIT_OP) {
+        if (TIME_OP) {
           cp = strtok(NULL, WHITESPACE);
           break;
         }
-        /* change WAIT_SECS */
+        /* change TIME */
         if (changed_wait_secs) {
           cp = strtok(NULL, WHITESPACE);
           fprintf(stderr,"%s line %d: multiple Wait commands.\n",
@@ -527,12 +541,12 @@ void read_config(Mailbox **root, char *homedir, char *username) {
           if (!cp)
             fprintf(stderr,"%s line %d: missing argument.\n",
                     filename, linenum);
-          else if (atoi(cp) >= MIN_WAIT_SECS) WAIT_SECS = atoi(cp);
+          else if (atoi(cp) >= MIN_TIME) TIME = atoi(cp);
           else {
             fprintf(stderr,
                     "%s line %d: Wait value less than minimum (%d).\n",
-                    filename, linenum, MIN_WAIT_SECS);
-            WAIT_SECS = MIN_WAIT_SECS;
+                    filename, linenum, MIN_TIME);
+            TIME = MIN_TIME;
           }
           changed_wait_secs = 1;
         }
@@ -577,27 +591,33 @@ void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg) {
 
 /* check ENV for options */
 void check_env(void) {
-  if (getenv(AWAY_CONF_FILE)) {
-    conf_file = getenv(AWAY_CONF_FILE);
-    CONF_OP = 1;
-    unsetenv(AWAY_CONF_FILE);
+  if (getenv(AWAY_RCFILE)) {
+    rcfile = getenv(AWAY_RCFILE);
+    RCFILE_OP = 1;
+    unsetenv(AWAY_RCFILE);
   }
 
-  if (getenv(AWAY_NO_WAIT)) {
-    WAIT_OP = 1;
-    unsetenv(AWAY_NO_WAIT);
-  } else if (getenv(AWAY_WAIT_SECS)) {
-    if (atoi(getenv(AWAY_WAIT_SECS)) >= MIN_WAIT_SECS) {
-      WAIT_SECS = atoi(getenv(AWAY_WAIT_SECS));
-      WAIT_OP = 1;
+  if (getenv(AWAY_NOTIME)) {
+    TIME_OP = 1;
+    unsetenv(AWAY_NOTIME);
+  } else if (getenv(AWAY_TIME)) {
+    if (atoi(getenv(AWAY_TIME)) >= MIN_TIME) {
+      TIME = atoi(getenv(AWAY_TIME));
+      TIME_OP = 1;
     }
-    unsetenv(AWAY_WAIT_SECS);
+    unsetenv(AWAY_TIME);
   }
 
   if (getenv(AWAY_PERSIST)) {
     PERSIST = atoi(getenv(AWAY_PERSIST));
     PERSIST_OP = 1;
     unsetenv(AWAY_PERSIST);
+  }
+
+  if (getenv(AWAY_MAIL)) {
+    CHECK_MAIL = atoi(getenv(AWAY_MAIL));
+    MAIL_OP = 1;
+    unsetenv(AWAY_MAIL);
   }
 }
 
