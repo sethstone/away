@@ -2,6 +2,11 @@ TODO/WISHLIST for Away
 ----------------------
 Email suggestions to away@unbeatenpath.net
 
+- Try to fix this error:
+
+    # cp /foo /path/to/away
+    cp: cannot create regular file `away': Text file busy
+
 - See if we can get around having to depend on the setenv() stuff or at
   least consolidate the vars into on single var.
 
