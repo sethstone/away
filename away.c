@@ -250,44 +250,41 @@ void salutations(void) {
 }
 
 /* Check for New Mail */
-short new_mail(char *path) {
+short new_mail(Mailbox *mb) {
   struct stat status;
   time_t mailread = 0, mailrecv = 0;
 
-  if (stat(path, &status) < 0) {
-    printf("Could not get status of \"%.200s\"\n", path);
-    /* if we can't get a status on the mail file, *
-     * then our thread is useless.  so kill it.   */
+  if (stat(mb->path, &status) < 0) {
+    /* couldn't stat */
+    if (access(mb->path, F_OK) == -1)
+      fprintf(stderr, "Could not open %s: file does not exist\n", mb->path);
+    else if (access(mb->path, R_OK) == -1)
+      fprintf(stderr, "Could not open %s: access denied\n", mb->path);
+    else
+      fprintf(stderr, "Could not open %s\n", mb->path);
     mailFound = 0;
-    pthread_exit(NULL);
-  }
-  else if (status.st_size != 0) {
+  } else if (status.st_size != 0) {
     mailrecv = status.st_mtime;
     mailread = status.st_atime;
   }
 
-  if (mailread < mailrecv)
+  if ((mailread < mailrecv) && (mb->mtime != mailrecv)) {
+    mb->mtime = mailrecv;
     return mailFound = 1;
-  else
+  } else {
     return mailFound = 0;
+  }
 }
 
 /* Mail Thread Function */
 void mail_thread_f(Mailbox **root) {
-  Mailbox *mb = NULL;
-  Mailbox *last = NULL;
+  Mailbox *mb = *root;
   short slept = 0;
 
   while (1) {
-    mb = *root;
-
-    while ((!mailFound || PERSIST) && mb != NULL) {
-      short deleted_root = 0;
-      short incr = 1;
-
-      if (new_mail(mb->path)) {
+    while (!mailFound || PERSIST) {
+      if (new_mail(mb)) {
         foundIn = mb->desc;
-
         /* make sure the main process has *
          * time to outputs its stuff...   */
         if (!slept) { sleep(1); slept++; }
@@ -295,32 +292,9 @@ void mail_thread_f(Mailbox **root) {
           printf("\a\n       You have new mail in %.200s.\n", foundIn);
           notified = 1;
         }
-
-        if (!PERSIST) break;
-        else {
-          /* delete node */
-          Mailbox *tmp = mb;
-          incr = 0;
-          /* reset place keepers */
-          notified = mailFound = 0;
-
-          if (mb == *root) {
-            deleted_root = 1;
-            *root = mb = mb->next;
-          } else { last->next = mb = mb->next; }
-
-          /* free */
-          if (tmp->path != NULL) free(tmp->path);
-          free(tmp);
-        }
-      } else last = mb;
-
-      /* don't go to the next mb if we deleted one */
-      if (incr) mb = mb->next;
+      }
     } /* while */
-
     if (mailFound && !PERSIST) break;
-    last = NULL;
     sleep(WAIT_SECS);
   }
 

@@ -99,6 +99,7 @@ static struct {
 typedef struct mailbox {
   char *path;             /* path to mailbox */
   char *desc;             /* description of mailbox */
+  time_t mtime;           /* last modified time (new mail) */
   struct mailbox *next;
 } Mailbox;
 
@@ -126,7 +127,7 @@ void ext_help(char *argv0);
 void stall(void);
 char *make_time(void);
 void salutations(void);
-short new_mail(char *path);
+short new_mail(Mailbox *mb);
 void mail_thread_f(Mailbox **root);
 static CmdCodes get_opcode(const char *cp, const char *filename, int linenum);
 static void *my_malloc(int n);
