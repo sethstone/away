@@ -38,10 +38,8 @@ int main(int argc, char **argv) {
     restart = 1;
     switch (c) {
       case 'c':
-        conf_file = (char *) strdup(optarg);
-        CONF_OP = 1;
-        option_count++;
-        if (! strchr(argv[option_count],'=')) { option_count++; }
+        setenv(AWAY_CONF_FILE, (char *) strdup(optarg), 1);
+        option_count += strchr(argv[option_count],'=') ? 1 : 2;
         break;
       case 'm':
         mesg_exec = 1;
@@ -51,22 +49,20 @@ int main(int argc, char **argv) {
         ext_help(argv[0]);
         break;
       case 'p':
-        PERSIST = PERSIST_OP = 1;
+        setenv(AWAY_PERSIST, "1", 1);
         option_count++;
         break;
       case 'P':
-        PERSIST = 0;
-        PERSIST_OP = 1;
+        setenv(AWAY_PERSIST, "0", 1);
         option_count++;
         break;
       case 'w':
-        if (atoi(optarg) >= MIN_WAIT_SECS) WAIT_SECS = atoi(optarg);
-        WAIT_OP = 1;
-        option_count++;
-        if (! strchr(argv[option_count],'=')) { option_count++; }
+        if (atoi(optarg) >= MIN_WAIT_SECS)
+          setenv(AWAY_WAIT_SECS, (char *) strdup(optarg), 1);
+        option_count += strchr(argv[option_count],'=') ? 1 : 2;
         break;
       case 'W':
-        WAIT_OP = 1;
+        setenv(AWAY_NO_WAIT, "1", 1);
         option_count++;
         break;
       case 'v':
@@ -78,9 +74,17 @@ int main(int argc, char **argv) {
   }
 
   /* if passed an option, we need to re-exec */
-  if (restart) { re_exec(argc, argv, option_count, mesg_exec); }
+  if (restart) {
+    /* make sure we have enough args for a message */
+    if (option_count+1 == argc)
+      short_help(argv[0]);
+    else
+      re_exec(argc, argv, option_count, mesg_exec);
+  }
 
+  check_env();
   master();
+  clean_env();
   return 0;
 }
 
@@ -518,3 +522,29 @@ void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg) {
   /* exec THIS! */
   execvp(original, newargv);
 }
+
+/* check ENV for options */
+void check_env(void) {
+  if (getenv(AWAY_CONF_FILE))
+    conf_file = getenv(AWAY_CONF_FILE);
+
+  if (!getenv(AWAY_NO_WAIT) && getenv(AWAY_WAIT_SECS) &&
+      atoi(getenv(AWAY_WAIT_SECS)) >= MIN_WAIT_SECS)
+    WAIT_SECS = atoi(getenv(AWAY_WAIT_SECS));
+
+  if (getenv(AWAY_PERSIST))
+    PERSIST = atoi(getenv(AWAY_PERSIST));
+
+  printf("conf_file=%s\n",conf_file);
+  printf("WAIT_SECS=%d\n",WAIT_SECS);
+  printf("PERSIST  =%d\n",PERSIST);
+}
+
+/* clean up ENV variables */
+void clean_env(void) {
+  if (getenv(AWAY_CONF_FILE)) unsetenv(AWAY_CONF_FILE);
+  if (getenv(AWAY_WAIT_SECS)) unsetenv(AWAY_WAIT_SECS);
+  if (getenv(AWAY_NO_WAIT)) unsetenv(AWAY_NO_WAIT);
+  if (getenv(AWAY_PERSIST)) unsetenv(AWAY_PERSIST);
+}
+
