@@ -87,7 +87,7 @@ int main(argc, argv)
         break;
       case '?':
         fprintf(stderr, "%s: use --help for more information\n", argv0);
-	exit(0);
+        exit(0);
         break;
       default:
         break;
