@@ -61,6 +61,7 @@ int PERSIST = 1;
 /* flags to allow command line options to override conf file options */
 short WAIT_OP = 0;
 short PERSIST_OP = 0;
+short CONF_OP = 0;
 
 /* global variables */
 char *foundIn = NULL, *awayTime = 0;
