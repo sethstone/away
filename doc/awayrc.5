@@ -27,26 +27,32 @@ The hash mark, or pound sign ("#"), is used as a comment character.
 You can use it to annotate your configuration file.  All text after
 the comment character to the end of the line is ignored.
 .SH COMMANDS
-.IP wait
-The number of seconds to wait before checking for new mail.  The
-default is 600 seconds (five minutes).  The value must be greater
-than the minimum set at compile time.  The only argument is the
-number of seconds to wait.
-.IP maildir
-A path where subsequent
-.B mailbox
-declarations will be located.  The only argument is the path itself.
-.IP mailbox
+.IP "mailbox FILENAME"
 A file that should be checked for "new mail."  The filename will be
 appended to the previous
 .B maildir
 declaration.  An optional description of the mailbox may be supplied.
 If the description contains a space, the entire description must be
 enclosed in braces, "{" and "}".
+.IP "maildir DIRECTORY"
+A path where subsequent
+.B mailbox
+declarations will be located.  The only argument is the path itself.
+.IP "persist VALUE"
+This command will set whether to do persistent mail checking.  VALUE
+can be 0, 1, no, or yes.
+.IP "wait SECONDS"
+The number of seconds to wait before checking for new mail.  The
+default is 300 seconds.  The value must be greater
+than the minimum set at compile time.  The only argument is the
+number of seconds to wait.
 .SH EXAMPLE
 .nf
 # check mail every 60 seconds
 wait 60
+
+# do not do persistent checking
+persist no
 
 # inbox
 maildir /var/spool/mail
