@@ -16,7 +16,7 @@ all: $(BINARY)
 # away
 $(BINARY): $(SRC)
 	$(CC) $(CFLAGS) $(LIBS) $(SRC) -o $(BINARY)
-	@strip $(BINARY)
+#	@strip $(BINARY)
 
 # make install
 install: $(BINARY)
