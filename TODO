@@ -2,6 +2,8 @@ TODO/WISHLIST for Away
 ----------------------
 Email suggestions to cameron@unbeatenpath.net
 
+- gracefully handle signals (SIGSEGV, etc)
+
 - create -c command line option to specify a different rc file
 
 - create -p and [Persist] option to command line and rc file to allow
