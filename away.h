@@ -21,7 +21,7 @@
 #define _AWAY_H
 
 /* version and contacts */
-#define VERSION "0.9.3"
+#define VERSION "0.9.4"
 #define CONTACT "cameron@unbeatenpath.net"
 #define MLIST   "away@unbeatenpath.net"
 
