@@ -6,5 +6,5 @@ Email bug reports to cameron@unbeatenpath.net
 
 * configure.in could use some work
 
-* if a mailbox doesn't exit, we hit an infinite loop...doh!
+* if a mailbox doesn't exist, we hit an infinite loop...doh!
 
