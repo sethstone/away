@@ -273,18 +273,16 @@ short new_mail(char *path) {
 void mail_thread_f(Mailbox **root) {
   Mailbox *mb = NULL;
   Mailbox *last = NULL;
-  short found_mail = 0;
   short slept = 0;
 
   while (1) {
     mb = *root;
 
-    while ((!found_mail || PERSIST) && mb != NULL) {
+    while ((!mailFound || PERSIST) && mb != NULL) {
       short deleted_root = 0;
       short incr = 1;
 
       if (new_mail(mb->path)) {
-        found_mail = 1;
         foundIn = mb->desc;
 
         /* make sure the main process has *
@@ -301,7 +299,7 @@ void mail_thread_f(Mailbox **root) {
           Mailbox *tmp = mb;
           incr = 0;
           /* reset place keepers */
-          notified = found_mail = mailFound = 0;
+          notified = mailFound = 0;
 
           if (mb == *root) {
             deleted_root = 1;
@@ -318,7 +316,7 @@ void mail_thread_f(Mailbox **root) {
       if (incr) mb = mb->next;
     } /* while */
 
-    if (found_mail && !PERSIST) break;
+    if (mailFound && !PERSIST) break;
     last = NULL;
     sleep(WAIT_SECS);
   }
@@ -420,6 +418,7 @@ void read_config(Mailbox **root, char *homedir, char *username) {
   char *cp = NULL, *maildir = "";
   unsigned int linenum = 0, opcode;
   short changed_wait_secs = 0;
+  short changed_persist = 0;
 
   if (CONF_OP)
     snprintf(filename, sizeof filename, "%.200s", conf_file);
@@ -492,9 +491,40 @@ void read_config(Mailbox **root, char *homedir, char *username) {
         }
         break;
 
+      case oPersist:
+        /* if changed from command line */
+        if (PERSIST_OP) {
+          cp = strtok(NULL, WHITESPACE);
+          break;
+        }
+        if (changed_persist) {
+          cp = strtok(NULL, WHITESPACE);
+          fprintf(stderr,"%.200s line %d: multiple Persist commands.\n",
+                  filename, linenum);
+        } else {
+          cp = strtok(NULL, WHITESPACE);
+          if (!cp)
+            fprintf(stderr,"%.200s line %d: missing argument.\n",
+                    filename, linenum);
+          else if (strcasecmp(cp,"yes") == 0 || atoi(cp) == 1)
+            PERSIST = 1;
+          else if (strcasecmp(cp,"no") == 0 || atoi(cp) == 0)
+            PERSIST = 0;
+          else {
+            fprintf(stderr,
+                    "%.200s line %d: Invalid Persist argument (%.200s).\n",
+                    filename, linenum, cp);
+          }
+          changed_persist = 1;
+        }
+        break;
+
       case oWait:
         /* if changed from command line */
-        if (WAIT_OP) break;
+        if (WAIT_OP) {
+          cp = strtok(NULL, WHITESPACE);
+          break;
+        }
         /* change WAIT_SECS */
         if (changed_wait_secs) {
           cp = strtok(NULL, WHITESPACE);
