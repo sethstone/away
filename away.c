@@ -204,7 +204,7 @@ void ext_help(char *argv0) {
   printf("                          recieved new mail\n");
   printf("  -P, --nopersist         stop checking mail if any mailbox is found\n");
   printf("                          to have new mail\n");
-  printf("  -w, --wait=SECS         sets how long the program waits between\n");
+  printf("  -w, --wait=SECONDS      sets how long the program waits between\n");
   printf("                          mail checks\n");
   printf("  -W, --nowait            use the default wait time of %d seconds\n",
          WAIT_SECS);
