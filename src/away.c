@@ -28,6 +28,7 @@ int main(argc, argv)
   int c = 0;
   int mesg_exec = 0;
   int restart = 0;
+  argv0 = argv[0];
 
   signal(SIGINT , SIG_IGN);
   signal(SIGHUP , SIG_IGN);
@@ -37,7 +38,7 @@ int main(argc, argv)
   signal(SIGUSR1, SIG_IGN);
   signal(SIGUSR2, SIG_IGN);
  
-  if (argc == 1) { short_help(argv[0]); }
+  if (argc == 1) { short_help(); }
   while ((c = getopt_long(argc, argv, "cCf:FhmpPt:Tv", long_options, &option_index)) && c != -1) {
     restart = 1;
     switch (c) {
@@ -58,7 +59,7 @@ int main(argc, argv)
         option_count++;
         break;
       case 'h':
-        ext_help(argv[0]);
+        ext_help();
         break;
       case 'm':
         mesg_exec = 1;
@@ -85,7 +86,7 @@ int main(argc, argv)
         print_version();
         break;
       case '?':
-        fprintf(stderr, "Try `%s --help` for more information.\n", argv[0]);
+        fprintf(stderr, "%s: use --help for more information\n", argv0);
 	exit(0);
         break;
       default:
@@ -97,7 +98,7 @@ int main(argc, argv)
   if (restart) {
     /* make sure we have enough args for a message */
     if (option_count+1 == argc)
-      short_help(argv[0]);
+      short_help();
     else
       re_exec(argc, argv, option_count, mesg_exec);
   }
@@ -117,7 +118,7 @@ void master(void)
 
   /* get home dir */
   pw = getpwuid(getuid());
-  if (!pw) { fprintf(stderr, "You don't exist!\n"); exit(1); }
+  if (!pw) { fprintf(stderr, "%s: error finding UID\n", argv0); exit(0); }
   read_config(&mailboxRoot, pw->pw_dir, pw->pw_name);
 
   /* start mail checking thread */
@@ -167,7 +168,7 @@ int authenticate(username)
   /* close PAM session */
   if (pam_end(pamh,error) != PAM_SUCCESS) {
     pamh = NULL;
-    fprintf(stderr,"away: ** failed to release PAM authenticator\n");
+    fprintf(stderr,"%s: failed to release PAM authenticator\n", argv0);
     error = 1;
   }
   return error;
@@ -209,16 +210,14 @@ void print_version(void)
 }
 
 /* Short Help */
-void short_help(argv0)
-  char *argv0;
+void short_help(void)
 {
   fprintf(stderr,"Usage: %s [OPTIONS] message [...]\n", argv0);
   exit (0);
 }
 
 /* Extended Help */
-void ext_help(argv0)
-  char *argv0;
+void ext_help(void)
 {
   printf("Usage: %s [OPTIONS] message [...]\n", argv0);
   printf("A terminal locking program.\n\n");
@@ -288,11 +287,13 @@ int new_mail(mb)
   if (stat(mb->path, &status) < 0) {
     /* couldn't stat */
     if (access(mb->path, F_OK) == -1)
-      fprintf(stderr, "Could not open %s: file does not exist\n", mb->path);
+      fprintf(stderr, "%s: could not open %s (nonexistent)\n",
+              argv0, mb->path);
     else if (access(mb->path, R_OK) == -1)
-      fprintf(stderr, "Could not open %s: access denied\n", mb->path);
+      fprintf(stderr, "%s: could not open %s (access denied)\n",
+              argv0, mb->path);
     else
-      fprintf(stderr, "Could not open %s\n", mb->path);
+      fprintf(stderr, "%s: could not open %s\n", argv0, mb->path);
     mail_found = 0;
   } else if (status.st_size != 0) {
     mailrecv = status.st_mtime;
@@ -344,8 +345,8 @@ static CmdCodes get_opcode(cp, filename, linenum)
   for (i = 0; commands[i].name; i++)
     if (strcasecmp(cp, commands[i].name) == 0)
       return commands[i].opcode;
-  fprintf(stderr, "%.200s: line %d: Bad configuration option: %.200s\n",
-    filename, linenum, cp);
+  fprintf(stderr, "%s: %.200s: line %d: bad configuration option: %.200s\n",
+          argv0, filename, linenum, cp);
   return oBadCmd;
 }
 
@@ -355,7 +356,7 @@ static void *my_malloc(n)
 {
   void *p = malloc( (size_t)n );
   if (p == NULL) {
-    fprintf(stderr, "Out of Memory");
+    fprintf(stderr, "%s: out of memory\n", argv0);
     exit(1);
   } return p;
 }
@@ -455,7 +456,8 @@ void read_config(root, homedir, username)
   /* check for existance of conf file */
   if (access(filename, F_OK) == -1) {
     if (RCFILE_OP) {
-      fprintf(stderr, "Could not open %s: file does not exist\n", filename);
+      fprintf(stderr, "%s: could not open %s (nonexistent)\n", 
+              argv0, filename);
     }
     set_defaults(root, username);
     return;
@@ -463,7 +465,8 @@ void read_config(root, homedir, username)
 
   /* check for existance of conf file */
   if (access(filename, R_OK) == -1) {
-    fprintf(stderr, "Could not open %s: access denied\n", filename);
+    fprintf(stderr, "%s: could not open %s (access denied)\n",
+              argv0, filename);
     set_defaults(root, username);
     return;
   }
@@ -495,21 +498,21 @@ void read_config(root, homedir, username)
         }
         if (changed_mail) {
           cp = strtok(NULL, WHITESPACE);
-          fprintf(stderr,"%s line %d: multiple Mail commands.\n",
-                  filename, linenum);
+          fprintf(stderr,"%s: %s line %d: multiple Mail commands.\n",
+                  argv0, filename, linenum);
         } else {
           cp = strtok(NULL, WHITESPACE);
           if (!cp)
-            fprintf(stderr,"%s line %d: missing argument.\n",
-                    filename, linenum);
+            fprintf(stderr,"%s: %s line %d: missing argument.\n",
+                    argv0, filename, linenum);
           else if (strcasecmp(cp,"yes") == 0 || atoi(cp) == 1)
             CHECK_MAIL = 1;
           else if (strcasecmp(cp,"no") == 0 || atoi(cp) == 0)
             CHECK_MAIL = 0;
           else {
             fprintf(stderr,
-                    "%s line %d: Invalid Mail argument (%.200s).\n",
-                    filename, linenum, cp);
+                    "%s: %s line %d: invalid Mail argument (%.200s).\n",
+                    argv0, filename, linenum, cp);
           }
           changed_mail = 1;
         }
@@ -523,8 +526,8 @@ void read_config(root, homedir, username)
         /* save the maildir for building paths to bailboxes */
         cp = strtok(NULL, WHITESPACE);
         if (!cp)
-          fprintf(stderr,"%s line %d: missing argument.\n",
-                  filename, linenum);
+          fprintf(stderr,"%s: %s line %d: missing argument.\n",
+                  argv0, filename, linenum);
         else if (strcmp(cp,maildir) != 0) 
           if (cp[0] == '~') {
             /* handle references to home dir as ~, ~foo, etc. */
@@ -549,23 +552,23 @@ void read_config(root, homedir, username)
         /* append mailbox to maildir and save */
         cp = strtok(NULL, WHITESPACE);
         if (!cp)
-          fprintf(stderr,"%s line %d: missing argument.\n",
-                  filename, linenum);
+          fprintf(stderr,"%s: %s line %d: missing argument.\n",
+                  argv0, filename, linenum);
         else if (strcmp(maildir,"") != 0) {
           char *desc = strtok(NULL, "\n");
           if (!desc) desc = strdup(cp);
           else if (strstr(desc,"{") && strstr(desc,"}"))
             desc = strtok(desc,"{}");
           else {
-            fprintf(stderr,"%s line %d: garbage at end of line.\n",
-                    filename, linenum);
+            fprintf(stderr,"%s: %s line %d: garbage at end of line.\n",
+                    argv0, filename, linenum);
             desc = strdup(cp);
           }
           add_mailbox(root, make_path(maildir,cp), desc);
         } else {
           fprintf(stderr,
-                  "%s line %d: Mailbox option needs a Maildir parent.\n",
-                  filename, linenum);
+                  "%s: %s line %d: Mailbox option needs a Maildir parent.\n",
+                  argv0, filename, linenum);
         }
         break;
 
@@ -577,21 +580,21 @@ void read_config(root, homedir, username)
         }
         if (changed_persist) {
           cp = strtok(NULL, WHITESPACE);
-          fprintf(stderr,"%s line %d: multiple Persist commands.\n",
-                  filename, linenum);
+          fprintf(stderr,"%s: %s line %d: multiple Persist commands.\n",
+                  argv0, filename, linenum);
         } else {
           cp = strtok(NULL, WHITESPACE);
           if (!cp)
-            fprintf(stderr,"%s line %d: missing argument.\n",
-                    filename, linenum);
+            fprintf(stderr,"%s: %s line %d: missing argument.\n",
+                    argv0, filename, linenum);
           else if (strcasecmp(cp,"yes") == 0 || atoi(cp) == 1)
             PERSIST = 1;
           else if (strcasecmp(cp,"no") == 0 || atoi(cp) == 0)
             PERSIST = 0;
           else {
             fprintf(stderr,
-                    "%s line %d: Invalid Persist argument (%.200s).\n",
-                    filename, linenum, cp);
+                    "%s: %s line %d: Invalid Persist argument (%.200s).\n",
+                    argv0, filename, linenum, cp);
           }
           changed_persist = 1;
         }
@@ -606,18 +609,18 @@ void read_config(root, homedir, username)
         /* change TIME */
         if (changed_time) {
           cp = strtok(NULL, WHITESPACE);
-          fprintf(stderr,"%s line %d: multiple Time commands.\n",
-                  filename, linenum);
+          fprintf(stderr,"%s: %s line %d: multiple Time commands.\n",
+                  argv0, filename, linenum);
         } else {
           cp = strtok(NULL, WHITESPACE);
           if (!cp)
-            fprintf(stderr,"%s line %d: missing argument.\n",
-                    filename, linenum);
+            fprintf(stderr,"%s: %s line %d: missing argument.\n",
+                    argv0, filename, linenum);
           else if (atoi(cp) >= MIN_TIME) TIME = atoi(cp);
           else {
             fprintf(stderr,
-                    "%s line %d: Time value less than minimum (%d).\n",
-                    filename, linenum, MIN_TIME);
+                    "%s: %s line %d: Time value less than minimum (%d).\n",
+                    argv0, filename, linenum, MIN_TIME);
             TIME = MIN_TIME;
           }
           changed_time = 1;
@@ -630,8 +633,8 @@ void read_config(root, homedir, username)
 
       /* check for garbage at EOL */
       if (strtok(NULL, WHITESPACE) != NULL)
-        fprintf(stderr,"%s line %d: garbage at end of line.\n",
-                filename, linenum);
+        fprintf(stderr,"%s: %s line %d: garbage at end of line.\n",
+                argv0, filename, linenum);
     } /* else */
   } /* while */
   fclose(f);

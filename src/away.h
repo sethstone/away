@@ -101,6 +101,8 @@ int mail_found = 0;
 int notified  = 0;
 /* name of mailbox new mail was found in */
 char *found_in = NULL;
+/* saving argv[0] for stderr reporting */
+char *argv0;
 
 /* PAM conversation struct */
 static struct pam_conv conv = { misc_conv, NULL };
@@ -156,8 +158,8 @@ void master(void);
 int authenticate(char *);
 char *make_path(char *, char *);
 void print_version(void);
-void short_help(char *);
-void ext_help(char *);
+void short_help(void);
+void ext_help(void);
 void stall(void);
 char *make_time(void);
 void salutations(void);
