@@ -189,12 +189,12 @@ char *make_path(char *dirs, char *filename) {
 
 /* Version */
 void print_version(void) {
-  printf("Away " VERSION "\n");
+  printf(PACKAGE " " VERSION "\n");
   printf("Copyright (c) 1999, 2000 Cameron Moore <" CONTACT ">\n");
-  printf("Away comes with NO WARRANTY, to the extent permitted by law.\n");
-  printf("You may redistribute copies of Away under the terms of the\n");
-  printf("GNU General Public License.  For more information about these\n");
-  printf("matters, see the files named COPYING.\n\n");
+  printf("This software comes with NO WARRANTY, to the extent permitted by law.\n");
+  printf("You may redistribute copies of this software under the terms of the\n");
+  printf("GNU General Public License.  For more information about these matters,\n");
+  printf("see the file named COPYING distributed with this software.\n\n");
   printf("To contact the developers, please send mail to <" MLIST ">.\n");
   exit (0);
 }
