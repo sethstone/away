@@ -1,7 +1,7 @@
 Cameron Moore <cameron@unbeatenpath.net>
 `-> creator, lead programmer
 
-Seth Stone <pepper@initzero.net>
+Seth Stone <seth@initzero.net>
 |-> suggested turning away into a terminal locking program
 |-> wrote the original execvp() code
 `-> various bug reports
