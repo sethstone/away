@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
   int option_count = 0;
   int option_index = 0;
   int c = 0;
-  short mesg_exec = 1;
+  short mesg_exec = 0;
   short restart = 0;
 
   signal(SIGINT , SIG_IGN);
@@ -38,15 +38,13 @@ int main(int argc, char **argv) {
     restart = 1;
     switch (c) {
       case 'c':
-        if (! set_conf_path(optarg)) {
-          fprintf(stderr, "Cannot set path to conf file: %.200s", optarg);
-          return 1;
-        }
+        conf_file = (char *) strdup(optarg);
+        CONF_OP = 1;
         option_count++;
         if (! strchr(argv[option_count],'=')) { option_count++; }
         break;
       case 'm':
-        mesg_exec = 0;
+        mesg_exec = 1;
         option_count++;
         break;
       case 'h':
@@ -82,21 +80,16 @@ int main(int argc, char **argv) {
   /* if passed an option, we need to re-exec */
   if (restart) { re_exec(argc, argv, option_count, mesg_exec); }
 
-printf("Wait   : %d\n", WAIT_SECS);
-printf("Persist: %d\n", PERSIST);
-printf("ZZzz...\n");
-sleep(3);
-return 0;
-
   master();
   return 0;
 }
 
 void master(void) {
-    pthread_t mail_thread;
-    short error = 1;
-    struct passwd *pw = NULL;
-    Mailbox *mailboxRoot = NULL, *mb = NULL;
+  pthread_t mail_thread;
+  short error = 1;
+  struct passwd *pw = NULL;
+  Mailbox *mailboxRoot = NULL, *mb = NULL;
+
 
     /* get home dir */
     pw = getpwuid(getuid());
@@ -140,7 +133,6 @@ void master(void) {
     };
 //  }
 }
-
 
 /* Authenticate Password */
 short authenticate(char *username) {
@@ -287,6 +279,7 @@ void mail_thread_f(Mailbox *root) {
     }
     if (!found_mail) sleep(WAIT_SECS);
   }
+
   /* sleep for 1 second to make sure the *
    * main process outputs its stuff...   */
   sleep(1);
@@ -394,7 +387,11 @@ void read_config(Mailbox **root, char *homedir, char *username) {
   unsigned int linenum = 0, opcode;
   short changed_wait_secs = 0;
 
-  snprintf(filename, sizeof filename, "%.100s/%.100s", homedir,conf_file);
+  if (CONF_OP)
+    snprintf(filename, sizeof filename, "%.200s", conf_file);
+  else
+    snprintf(filename, sizeof filename, "%.100s/%.100s", homedir,conf_file);
+
   /* open rc file */
   f = fopen(filename, "r");
   if (!f) {
@@ -514,8 +511,9 @@ void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg) {
 
   /* pad with space to make use of one word arguments to -m */
   newargv[argc-(opt_cnt+as_mesg)] = " ";
-  i = opt_cnt - (as_mesg ? 0 : 1);
-  for(; i > 0; i--) { newargv[argc-i] = NULL; }
+  i = opt_cnt;// - (as_mesg ? 1 : 0);
+  for(; i > 0; i--)
+    newargv[argc-i] = NULL;
 
   /* exec THIS! */
   execvp(original, newargv);
