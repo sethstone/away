@@ -104,7 +104,7 @@ void master(void) {
   /* build time string */
   awayTime = make_time();
   /* start mail checking thread */
-  pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, mailboxRoot);
+  pthread_create(&mail_thread, NULL, (void*)&mail_thread_f, &mailboxRoot);
 
   /* lock this sucka up */
   while (error) {
@@ -270,14 +270,14 @@ short new_mail(char *path) {
 }
 
 /* Mail Thread Function */
-void mail_thread_f(Mailbox *root) {
+void mail_thread_f(Mailbox **root) {
   Mailbox *mb = NULL;
   Mailbox *last = NULL;
   short found_mail = 0;
   short slept = 0;
 
   while (1) {
-    mb = root;
+    mb = *root;
 
     while ((!found_mail || PERSIST) && mb != NULL) {
       short deleted_root = 0;
@@ -303,9 +303,9 @@ void mail_thread_f(Mailbox *root) {
           /* reset place keepers */
           notified = found_mail = 0;
 
-          if (mb == root) {
+          if (mb == *root) {
             deleted_root = 1;
-            root = mb = mb->next;
+            *root = mb = mb->next;
           } else { last->next = mb = mb->next; }
 
           /* free */

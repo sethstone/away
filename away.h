@@ -120,7 +120,7 @@ void stall(void);
 char *make_time(void);
 void salutations(void);
 short new_mail(char *path);
-void mail_thread_f(Mailbox *root);
+void mail_thread_f(Mailbox **root);
 static CmdCodes get_opcode(const char *cp, const char *filename, int linenum);
 static void *my_malloc(int n);
 static Mailbox *make_cell(void);
