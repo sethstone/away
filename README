@@ -3,8 +3,9 @@
                            -------------          
                             Version 0.9
 
-    Away is a simple program that has three functions:  lets others
-    know you are away, locks your terminal, and checks for new mail.
+    Away is a simple program that locks your terminal, checks for new 
+    mail in any given number of mailboxes, and lets others know why you 
+    are inactive.
 
     Like many people (I assume), I always use the `w` command to see
     what people are doing on a server.  I often need to talk with
@@ -17,11 +18,10 @@
     the place of "-bash" (or whatever shell you hold dear to your
     heart) in the `w` command's "WHAT" column.
 
-    Away will also check for new mail every 5 minutes and will notify
-    you once new mail is found.  Once Away finds that you have new mail
-    in any file, it will stop checking for newer mail.  See the
-    "Configuration" section for more information on setting up multiple
-    mailboxes to be checked besides the default $INBOX file.
+    Away will also notify you if you have new mail.  By default Away
+    only checks for mail in a user's $INBOX, but by using the awayrc
+    file, a user can configure any given number of mailboxes to be
+    checked.
 
     Away also uses PAM to lock your terminal the way xlock or xlockmore
     locks an X11 session.
@@ -32,11 +32,11 @@
     Installation
     ------------
 
-    $ tar zxvf away-x.y.tar.gz
+    $ tar zxvf away-x.y.z.tar.gz
       - or -
-      tar yxvf away-x.y.tar.bz2
+      tar yxvf away-x.y.z.tar.bz2
       - or -
-      tar Ixvf away-x.y.tar.bz2
+      tar Ixvf away-x.y.z.tar.bz2
     $ cd away-x.y/
     $ make
     $ su -c "make install"
@@ -51,9 +51,9 @@
     Configuration
     -------------
 
-    Each user may have an '.awayrc' configuration file in their home
+    Each user may have an ~/.awayrc configuration file in their home
     directory.  For a description and example of the rc file, see the
-    'awayrc' file distributed in this package.
+    awayrc(5) man page or the awayrc file distributed in this package.
 
 
     Usage
@@ -84,10 +84,13 @@
         $ ln -s reading /usr/local/bin/away
         $ reading /.
 
+    For more information, see the away(1) man page.
+
 
     Contributers
     ------------
 
+    See CREDITS file.
     Seth Stone (pepper@initzero.net) suggested the locking
         functionality and sent me the -m patch.  Thanks Seth!
 
@@ -104,12 +107,11 @@
 
         http://unbeatenpath.net/software/away/
 
-    There are other places to get Away (no pun intended):
+    Alternate download location:
 
-        ftp://ftp.wtlug.org/pub/away/
-        http://www.wtlug.org/
+        ftp://wtlug.org/pub/away/
 
-    Special thanks to the guys at WTLUG.
+    Special thanks to the guys at WTLUG and Leapfrog Technologies.
 
 
     Contact
