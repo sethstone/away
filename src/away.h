@@ -29,29 +29,32 @@
 
 #include <stdio.h>
 
-#ifdef   STDC_HEADERS
+#ifdef    STDC_HEADERS
 # include <stdlib.h>
 # include <string.h>
 #else
-# ifndef HAVE_STRDUP
+# ifndef  HAVE_STRDUP
 #  define strdup(x) calc_strdup((CONST char *)(x))
 # endif //HAVE_STRDUP
-# ifndef HAVE_STRSPN
+# ifndef  HAVE_STRSPN
 //#  define strspn(x) ????
 # endif
-#endif //STDC_HEADERS
+#endif  //STDC_HEADERS
 
-#ifdef   HAVE_UNISTD_H
+#ifdef    HAVE_UNISTD_H
 # include <unistd.h>
-#endif //HAVE_UNISTD_H
+#endif  //HAVE_UNISTD_H
 
-#ifdef   TM_IN_SYS_TIME
+#ifdef    TM_IN_SYS_TIME
 # include <sys/time.h>
 #else
 # include <time.h>
-#endif //TIM_IN_SYS_TIME
+#endif  //TIM_IN_SYS_TIME
 
-#include <paths.h>
+#ifdef    HAVE_PATHS_H
+# include <paths.h>
+#endif  //HAVE_PATHS_H
+
 #include <pwd.h>
 #include <ctype.h>
 #include <signal.h>
