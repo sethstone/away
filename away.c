@@ -96,7 +96,6 @@ void master(void) {
   struct passwd *pw = NULL;
   Mailbox *mailboxRoot = NULL, *mb = NULL;
 
-
   /* get home dir */
   pw = getpwuid(getuid());
   if (!pw) { fprintf(stderr, "You don't exist!\n"); exit(1); }
@@ -270,8 +269,6 @@ short new_mail(char *path) {
     return mailFound = 0;
 }
 
-Mailbox *ll_delete(Mailbox *cur) { return NULL; }
-
 /* Mail Thread Function */
 void mail_thread_f(Mailbox *root) {
   Mailbox *mb = NULL;
@@ -280,15 +277,11 @@ void mail_thread_f(Mailbox *root) {
   short slept = 0;
 
   while (1) {
-    short deleted_root = 0;
-
-int i = 1;    
-
     mb = root;
-    while ((!found_mail || PERSIST) && mb != NULL) {
-      short incr = 1;
 
-printf("-* %d:%s *-\n",i++,mb->path);
+    while ((!found_mail || PERSIST) && mb != NULL) {
+      short deleted_root = 0;
+      short incr = 1;
 
       if (new_mail(mb->path)) {
         found_mail = 1;
@@ -302,44 +295,34 @@ printf("-* %d:%s *-\n",i++,mb->path);
           notified = 1;
         }
 
-!! FIXME - getting SIGSEGV when last two have new mail...
-
         if (!PERSIST) break;
         else {
+          /* delete node */
           Mailbox *tmp = mb;
           incr = 0;
+          /* reset place keepers */
+          notified = found_mail = 0;
 
           if (mb == root) {
             deleted_root = 1;
             root = mb = mb->next;
-          } else last->next = mb = mb->next;
+          } else { last->next = mb = mb->next; }
 
           /* free */
           if (tmp->path != NULL) free(tmp->path);
           free(tmp);
         }
-      }
-      /* don't go to the next mb if we deleted one */
-      if (incr) {
-        if (!deleted_root) last = mb;
-        mb = mb->next;
-      }
+      } else last = mb;
 
+      /* don't go to the next mb if we deleted one */
+      if (incr) mb = mb->next;
     } /* while */
+
     if (found_mail && !PERSIST) break;
     last = NULL;
     sleep(WAIT_SECS);
   }
 
-  /* sleep for 1 second to make sure the *
-   * main process outputs its stuff...   */
-  sleep(1);
-
-  /* don't interrupt user authentication */
-  if (!pamActive) {
-    printf("\a\n       You have new mail in %.200s.\n", foundIn);
-    notified = 1;
-  }
   /* exit the thread */
   pthread_exit(NULL);
 }
