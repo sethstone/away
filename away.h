@@ -32,6 +32,12 @@
 /* Max filename length */
 #define FILE_NAME_LEN 1024
 
+/* ENV variable names */
+#define AWAY_CONF_FILE    "AWAY_CONF_FILE"
+#define AWAY_WAIT_SECS    "AWAY_WAIT_SECS"
+#define AWAY_NO_WAIT      "AWAY_NO_WAIT"
+#define AWAY_PERSIST      "AWAY_PERSIST"
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -95,6 +101,8 @@ static struct option long_options[] =
   {"conf", 1, 0, 'c'},
   {"message", 0, 0, 'm'},
   {"help", 0, 0, 'h'},
+  {"nopersist", 0, 0, 'P'},
+  {"nowait", 0, 0, 'W'},
   {"persist", 0, 0, 'p'},
   {"wait", 1, 0, 'w'},
   {"version", 0, 0, 'v'},
@@ -121,5 +129,7 @@ static void add_mailbox(Mailbox **list, char *path, char *desc);
 void set_defaults(Mailbox **root, char *name);
 void read_config(Mailbox **root, char *homedir, char *username);
 void re_exec(int argc, char *argv[], int opt_cnt, short as_mesg);
+void check_env(void);
+void clean_env(void);
 
 #endif   /* _AWAY_H */
