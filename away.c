@@ -409,8 +409,8 @@ void read_config(Mailbox **root, char *homedir, char *username) {
   FILE *f = NULL;
   char line[1024], filename[256];
   char *cp = NULL, *maildir = "";
-  unsigned int linenum = 0, opcode;
-  short changed_time = 0, changed_persist = 0;
+  unsigned int linenum = 0, opcode = 0;
+  short changed_mail = 0, changed_persist = 0, changed_time = 0;
 
   if (RCFILE_OP)
     snprintf(filename, sizeof filename, "%.200s", rcfile);
@@ -452,6 +452,34 @@ void read_config(Mailbox **root, char *homedir, char *username) {
       opcode = get_opcode(cp, filename, linenum);
 
       switch (opcode) {
+      case oMail:
+        /* if changed from command line */
+        if (MAIL_OP) {
+          cp = strtok(NULL, WHITESPACE);
+          break;
+        }
+        if (changed_mail) {
+          cp = strtok(NULL, WHITESPACE);
+          fprintf(stderr,"%s line %d: multiple Mail commands.\n",
+                  filename, linenum);
+        } else {
+          cp = strtok(NULL, WHITESPACE);
+          if (!cp)
+            fprintf(stderr,"%s line %d: missing argument.\n",
+                    filename, linenum);
+          else if (strcasecmp(cp,"yes") == 0 || atoi(cp) == 1)
+            CHECK_MAIL = 1;
+          else if (strcasecmp(cp,"no") == 0 || atoi(cp) == 0)
+            CHECK_MAIL = 0;
+          else {
+            fprintf(stderr,
+                    "%s line %d: Invalid Mail argument (%.200s).\n",
+                    filename, linenum, cp);
+          }
+          changed_mail = 1;
+        }
+        break;
+
       case oMaildir:
         /* save the maildir for building paths to bailboxes */
         cp = strtok(NULL, WHITESPACE);

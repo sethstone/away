@@ -85,6 +85,7 @@ static struct pam_conv conv = { misc_conv, NULL };
 
 /* rc file commands */
 typedef enum {
+  oMail,
   oMaildir,
   oMailbox,
   oPersist,
@@ -96,6 +97,7 @@ static struct {
   const char *name;
   CmdCodes opcode;
 } commands[] = {
+  { "mail", oMail },
   { "maildir", oMaildir },
   { "mailbox", oMailbox },
   { "persist", oPersist },
