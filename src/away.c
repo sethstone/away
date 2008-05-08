@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Or try here: http://www.fsf.org/copyleft/gpl.html
  *
- * $Id: away.c,v 1.16 2002-08-12 05:02:59 hrothgar Exp $
+ * $Id: away.c,v 1.17 2008-05-08 04:28:36 hrothgar Exp $
  */
 
 #include "away.h"
@@ -270,9 +270,24 @@ void ext_help(void)
 /* Stall */
 void stall(void)
 {
+  struct termios old, new;
+
   printf("\n       You went away at %.20s", make_time());
   printf("\n\n -- Press [Enter] to come back online --\n");
+
+  /* save term state */
+  tcgetattr(0, &old);
+  new = old;
+
+  /* turn off echo */
+  new.c_lflag &= ~ECHO;
+  tcsetattr(0, TCSANOW, &new);
+
   getchar();
+
+  /* reset term */
+  tcsetattr(0, TCSANOW, &old);
+  printf("\n");
 }
 
 /* Get Current Time */

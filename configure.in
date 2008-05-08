@@ -19,7 +19,7 @@ AC_CHECK_LIB(pthread, pthread_create)
 
 dnl Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS(paths.h unistd.h)
+AC_CHECK_HEADERS(paths.h unistd.h termios.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST

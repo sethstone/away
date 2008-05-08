@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * Or try here: http://www.fsf.org/copyleft/gpl.html
  *
- * $Id: away.h,v 1.11 2002-08-12 00:02:53 hrothgar Exp $
+ * $Id: away.h,v 1.12 2008-05-08 04:28:36 hrothgar Exp $
  */
 
 #ifndef _AWAY_H
@@ -65,6 +65,7 @@
 #include <sys/stat.h>
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
+#include <termios.h>
 
 
 /*
